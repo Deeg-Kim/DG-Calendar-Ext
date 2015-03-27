@@ -1,0 +1,39 @@
+parameters:
+    dg.calendar.config.table: %core.table_prefix%calendar_config
+    dg.calendar.events.table: %core.table_prefix%calendar_events
+
+services:
+    dg.calendar.controller.main:
+        class: dg\calendar\controller\main
+        arguments:
+            - @auth
+            - @config
+            - @dbal.conn
+            - @controller.helper
+            - @template
+            - @user
+            - @dg.calendar.events
+            - %dg.calendar.config.table%
+            - %dg.calendar.events.table%
+            - %core.root_path%
+            - %core.php_ext%
+            
+    dg.calendar.events:
+        class: dg\calendar\model\events
+        arguments:
+            - @auth
+            - @config
+            - @dbal.conn
+            - @user
+            - %dg.calendar.events.table%
+            
+    dg.calendar.listener:
+        class: dg\calendar\event\main_listener
+        arguments:
+            - @auth
+            - @controller.helper
+            - @template
+            - @path_helper
+            - @user
+        tags:
+            - { name: event.listener }

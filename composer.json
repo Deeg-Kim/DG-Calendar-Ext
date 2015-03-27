@@ -1,0 +1,27 @@
+{
+	"name": "dg/calendar",
+	"type": "phpbb-extension",
+	"description": "DG Calendar Extension for phpBB 3.1",
+	"homepage": "http://ext.cyneer.com",
+	"version": "0.1.0",
+	"time": "2015-03-17",
+	"license": "GPL-2.0",
+	"authors": [{
+			"name": "DG Kim",
+			"email": "donggyunkim@gmail.com",
+			"homepage": "http://www.dgkim.com",
+			"role": "Lead Developer"
+		}],
+	"require": {
+		"php": ">=5.3.3"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "DG Calendar Extension",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.0,<3.2.*@dev"
+		}
+	}
+}

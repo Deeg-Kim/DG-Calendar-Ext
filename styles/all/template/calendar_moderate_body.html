@@ -1,0 +1,47 @@
+<!-- INCLUDE overall_header.html -->
+
+<h2>{L_MODERATE_CALENDAR}</h2>
+
+<div id="tabs">
+	<ul>
+		<li class="tab activetab"><a href="#">{L_MAIN}</a></li>
+	</ul>
+</div>
+<div class="panel bg3">
+	<div class="inner">
+    	<div style="width: 100%;">
+        	<div id="cp-menu">
+            	<div id="navigation" role="naviation" class="responsive-hide">
+                	<ul>
+                    	<li id="active-subsection"><a href="#">{L_FRONT_PAGE}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="cp-main" class="panel-container">
+            	<h2>{L_MAIN}</h2>
+                <div class="panel">
+                	<h3>{L_LAST_5_EVENTS}</h3>
+                    <p>
+                    	<!-- IF S_HAS_EVENTS -->
+                        <table class="table1 responsive">
+                        	<thead>
+                            	<th class="name">{L_TITLE}</th>
+                                <th class="name">{L_USERNAME}</th>
+                                <th class="name">{L_VIEW_EVENT}</th>
+                                <th class="name">{L_TIME}</th>
+                            </thead>
+                            <tbody>
+                            	{LAST_5_EVENTS}
+                            </tbody>
+                        </table>
+                        <!-- ELSE -->
+                        {L_NO_EVENTS}
+                        <!-- ENDIF -->
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- INCLUDE overall_footer.html -->

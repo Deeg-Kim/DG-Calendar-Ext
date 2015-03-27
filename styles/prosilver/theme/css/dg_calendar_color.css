@@ -1,0 +1,38 @@
+@charset "UTF-8";
+/* CSS Document */
+
+div.calendar-nav-links {
+	font-size: 1.3em;
+}
+
+table.calendar {
+	border-top-left-radius: 7px;
+	border-top-right-radius: 7px;
+}
+
+thead.calendar-head {
+	background-color: #cadceb;
+	color: #105289;
+	font-size: 1.5em;
+}
+
+table.calendar, tr.calendar-row, td.calendar-day, td.calendar-day-head {
+	border: 1px solid #105289;
+}
+
+td.today {
+	background-color: #F6F4D0;
+}
+
+div.day-number {
+	margin-top: 4px;
+	margin-left: 4px;
+}
+
+div.calendar-event {
+	border-radius: 3px;
+	background-color: #cadceb;
+	color: #105289;
+	padding: 4px 3px 4px 3px;
+	border: 1px solid #105289;
+}
