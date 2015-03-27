@@ -78,20 +78,24 @@ class main
 	}
 
 	/**
-	* Controller for route /calendar
+	* Controller for route /calendar/{month}/{year}
 	*
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	*/
-	public function handle()
+	public function handle($month, $year)
 	{	 
 		if($this->auth->acl_get('m_calendar')) {
 			$this->template->assign_vars(array(
 				'U_MODERATE_CALENDAR'	=> $this->helper->route('moderate'),
 			));
 		}
-	
-		$month = date('n');
-		$year = date('Y');
+
+		if($month == NULL) {
+			$month = date('n');
+		}
+		if($year == NULL) {
+			$year = date('Y');
+		}
 		
 		$month_array = array(
 			1   => $this->user->lang('JANUARY'),
@@ -125,151 +129,6 @@ class main
 		));
 
 		return $this->helper->render('calendar_body.html', $this->user->lang('CALENDAR'));
-	}
-	
-	/**
-	* Controller for route /calendar
-	*
-	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
-	*/
-	public function view($month, $year)
-	{	
-		$month_array = array(
-			1   => $this->user->lang('JANUARY'),
-			2   => $this->user->lang('FEBRUARY'),
-			3   => $this->user->lang('MARCH'),
-			4   => $this->user->lang('APRIL'),
-			5   => $this->user->lang('MAY'),
-			6   => $this->user->lang('JUNE'),
-			7   => $this->user->lang('JULY'),
-			8   => $this->user->lang('AUGUST'),
-			9   => $this->user->lang('SEPTEMBER'),
-			10  => $this->user->lang('OCTOBER'),
-			11  => $this->user->lang('NOVEMBER'),
-			12  => $this->user->lang('DECEMBER'),
-		);
-		
-		// assign variables
-		$this->template->assign_vars(array(
-			'U_CALENDAR_PAGE'	=> $this->helper->route('main'),
-			'U_CREATE_LINK'		=> $this->helper->route('create'),
-			
-			'S_CAN_MAKE_EVENT'	=> $this->auth->acl_get('u_new_event'),
-			
-			'CALENDAR_TITLE' 	=> $month_array[$month].' '.$year,
-			'CALENDAR_OUTPUT'	=> $this->draw_calendar($month, $year),
-		));
-
-		return $this->helper->render('calendar_body.html', $this->user->lang('CALENDAR'));
-	}
-
-	private function draw_calendar($month, $year){
-		/* draw table */
-		$calendar = '<table cellpadding="0" cellspacing="0" class="calendar">';
-		  
-		/* table headings */
-		$headings = array($this->user->lang('SUNDAY'), $this->user->lang('MONDAY'), $this->user->lang('TUESDAY'), $this->user->lang('WEDNESDAY'), $this->user->lang('THURSDAY'), $this->user->lang('FRIDAY'), $this->user->lang('SATURDAY'));
-		$calendar .= '<thead class="calendar-head"><tr class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">', $headings).'</td></tr></thead>';
-		
-		/* generation found at http://davidwalsh.name/php-calendar */  
-		/* days and weeks vars now ... */
-		$running_day = date('w', mktime(0, 0, 0, $month, 1, $year));
-		$days_in_month = date('t', mktime(0, 0, 0, $month, 1, $year));
-		$days_in_this_week = 1;
-		$day_counter = 0;
-		$dates_array = array();
-		  
-		/* row for week one */
-		$calendar .= '<tr class="calendar-row">';
-		  
-		/* print "blank" days until the first of the current week */
-		for($x = 0; $x < $running_day; $x++) {
-			$calendar .= '<td class="calendar-day-np"> </td>';
-			$days_in_this_week++;
-		}
-		  
-		/* keep going with days.... */
-		for($list_day = 1; $list_day <= $days_in_month; $list_day++) {
-			if($list_day == date('j') && $month == date('n') && $year == date('Y')) {
-				$calendar .= '<td class="calendar-day today">';
-			}
-			else {
-				$calendar .= '<td class="calendar-day">';
-			}
-			/* add in the day number */
-			$calendar .= '<div class="day-number">'.$list_day.'</div>';
-		  
-			$events = $this->events->get_events_of_day($month, $list_day, $year);
-
-			if(!empty($events)) {
-				for($i = 0; $i < count($events); $i++) {
-					$events[$i]['time_number'] = $this->time_to_number($events[$i]['start'], $this->user->lang('PM'));
-				}
-				usort($events, function ($a, $b) {
-					return strnatcmp($a['time_number'], $b['time_number']);
-				});
-			}
-			
-			foreach($events as $event) {
-		 		$calendar .= '<div class="calendar-event"><b>' . $event['title']. '</b>';
-				if($event['start'] != NULL) {
-					$calendar .= '<br/>' . $event['start'] . ' - ' . $event['end'];
-				}
-				$calendar .= '</div>';
-			}
-			unset($events);
-		
-			$calendar .= '</td>';
-			
-			if($running_day == 6) {
-				$calendar .= '</tr>';
-				
-				if(($day_counter+1) != $days_in_month) {
-		  			$calendar .= '<tr class="calendar-row">';
-				}
-			
-				$running_day = -1;
-				$days_in_this_week = 0;
-			}
-			
-			$days_in_this_week++; $running_day++; $day_counter++;
-		}
-		  
-		/* finish the rest of the days in the week */
-		if($days_in_this_week < 8) {
-			for($x = 1; $x <= (8 - $days_in_this_week); $x++) {
-				$calendar .= '<td class="calendar-day-np"> </td>';
-			}
-		}
-  
-		/* final row */
-		$calendar .= '</tr>';
-  
-		/* end the table */
-		$calendar .= '</table>';
-
-		/* all done, return result */
-		return $calendar;
-	}
-	
-	private function time_to_number($time, $pm) {
-		// explode time into parts
-		$parts = array();
-		$parts = explode(':', $time);
-		
-		$second_parts = array();
-		$second_parts = explode(' ', $parts[1]);
-		
-		$parts[1] = $second_parts[0];
-		$parts[2] = $second_parts[1];
-		
-		// calculate minute number of day
-		if($parts[2] == $pm) {
-			$parts[0] = $parts[0] + 12;
-		}
-		
-		$number = $parts[0] * 60 + $parts[1];
-		return $number;
 	}
 	
 	/**
@@ -408,6 +267,65 @@ class main
 	}
 	
 	/**
+	* Controller for route /calendar/event/{id}
+	*
+	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	*/
+	public function event($id)
+	{
+		$event = $this->events->get_events(false, false, $id);
+		$navlinks_array = array(
+			array(
+				'FORUM_NAME'			=> $this->user->lang('CALENDAR_PAGE'),
+				'U_VIEW_FORUM'		=> $this->helper->route('main'),
+			),
+			array(
+				'FORUM_NAME'			=> $this->user->lang('VIEW_EVENT'),
+				'U_VIEW_FORUM'		=> $this->helper->route('moderate'),
+			),
+		);
+		
+		foreach($navlinks_array as $name)
+		{
+			$this->template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'			=> $name['FORUM_NAME'],
+				'U_VIEW_FORUM'		=> $name['U_VIEW_FORUM'],
+			));
+		}
+		
+		// build content
+		$content = "";
+		
+		$content .= '<b>' . $this->user->lang('DATE') . ':</b> ' . $event['month'] . '/' . $event['day'] . '/' . $event['year'];
+		if($event['start'] != NULL) {
+			$content .= '<br/><b>' . $this->user->lang('START_TIME') . ':</b> ' . $event['start'];
+			$content .= '<br/><b>' . $this->user->lang('END_TIME') . ':</b> ' . $event['end'];
+		}
+		if($event['description'] != NULL) {
+			$content .= '<br/><b>' . $this->user->lang('DESCRIPTION') . ':</b> ' . $event['description'];
+		}
+		
+		// build user
+		$sql = 'SELECT *
+				 FROM ' . USERS_TABLE . '
+				 WHERE user_id = ' . $event['user_id'];
+		$result = $this->db->sql_query($sql);
+		$member = $this->db->sql_fetchrow($result);
+		
+		get_username_string("full", $member['user_id'], $member['username'], $member['user_colour']);
+		
+		$this->template->assign_vars(array(
+			'EVENT_CONTENT'			=> $content,
+			'EVENT_TITLE'			=> $event['title'],
+			
+			'U_CALENDAR_PAGE'		=> $this->helper->route('main'),
+			'U_EVENT_SELF'			=> $this->helper->route('event', array('id' => $id)),
+		));
+		
+		return $this->helper->render('calendar_event_body.html', $this->user->lang('CREATE_EVENT'));
+	}
+	
+	/**
 	* Controller for route /calendar/moderate
 	*
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
@@ -453,18 +371,130 @@ class main
 			),
 			array(
 				'FORUM_NAME'			=> $this->user->lang['MCP_CALENDAR'],
-				'U_VIEW_FORUM'		=>$this->helper->route('moderate'),
+				'U_VIEW_FORUM'		=> $this->helper->route('moderate'),
 			),
 		);
 		
-		foreach( $navlinks_array as $name )
+		foreach($navlinks_array as $name)
 		{
 			$this->template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> $name['FORUM_NAME'],
-				'U_VIEW_FORUM'	=> $name['U_VIEW_FORUM'],
+				'FORUM_NAME'	 		=> $name['FORUM_NAME'],
+				'U_VIEW_FORUM'		=> $name['U_VIEW_FORUM'],
 			));
 		}
 		
 		return $this->helper->render('calendar_moderate_body.html', $this->user->lang('CALENDAR'));
+	}
+	
+	// private methods
+
+	// the big thing where there's a calendar
+	private function draw_calendar($month, $year){
+		/* draw table */
+		$calendar = '<table cellpadding="0" cellspacing="0" class="calendar">';
+		  
+		/* table headings */
+		$headings = array($this->user->lang('SUNDAY'), $this->user->lang('MONDAY'), $this->user->lang('TUESDAY'), $this->user->lang('WEDNESDAY'), $this->user->lang('THURSDAY'), $this->user->lang('FRIDAY'), $this->user->lang('SATURDAY'));
+		$calendar .= '<thead class="calendar-head"><tr class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">', $headings).'</td></tr></thead>';
+		
+		/* generation found at http://davidwalsh.name/php-calendar */  
+		/* days and weeks vars now ... */
+		$running_day = date('w', mktime(0, 0, 0, $month, 1, $year));
+		$days_in_month = date('t', mktime(0, 0, 0, $month, 1, $year));
+		$days_in_this_week = 1;
+		$day_counter = 0;
+		$dates_array = array();
+		  
+		/* row for week one */
+		$calendar .= '<tr class="calendar-row">';
+		  
+		/* print "blank" days until the first of the current week */
+		for($x = 0; $x < $running_day; $x++) {
+			$calendar .= '<td class="calendar-day-np"> </td>';
+			$days_in_this_week++;
+		}
+		  
+		/* keep going with days.... */
+		for($list_day = 1; $list_day <= $days_in_month; $list_day++) {
+			if($list_day == date('j') && $month == date('n') && $year == date('Y')) {
+				$calendar .= '<td class="calendar-day today">';
+			}
+			else {
+				$calendar .= '<td class="calendar-day">';
+			}
+			/* add in the day number */
+			$calendar .= '<div class="day-number">'.$list_day.'</div>';
+		  
+			$events = $this->events->get_events_of_day($month, $list_day, $year);
+
+			if(!empty($events)) {
+				for($i = 0; $i < count($events); $i++) {
+					$events[$i]['time_number'] = $this->time_to_number($events[$i]['start'], $this->user->lang('PM'));
+				}
+				usort($events, function ($a, $b) {
+					return strnatcmp($a['time_number'], $b['time_number']);
+				});
+			}
+			
+			foreach($events as $event) {
+		 		$calendar .= '<div class="calendar-event"><b><a href="' . $this->helper->route('event', array('id' =>  $event['id'])) . '">' . $event['title']. '</a></b>';
+				if($event['start'] != NULL) {
+					$calendar .= '<br/>' . $event['start'] . ' - ' . $event['end'];
+				}
+				$calendar .= '</div>';
+			}
+			unset($events);
+		
+			$calendar .= '</td>';
+			
+			if($running_day == 6) {
+				$calendar .= '</tr>';
+				
+				if(($day_counter+1) != $days_in_month) {
+		  			$calendar .= '<tr class="calendar-row">';
+				}
+			
+				$running_day = -1;
+				$days_in_this_week = 0;
+			}
+			
+			$days_in_this_week++; $running_day++; $day_counter++;
+		}
+		  
+		/* finish the rest of the days in the week */
+		if($days_in_this_week < 8) {
+			for($x = 1; $x <= (8 - $days_in_this_week); $x++) {
+				$calendar .= '<td class="calendar-day-np"> </td>';
+			}
+		}
+  
+		/* final row */
+		$calendar .= '</tr>';
+  
+		/* end the table */
+		$calendar .= '</table>';
+
+		/* all done, return result */
+		return $calendar;
+	}
+	
+	private function time_to_number($time, $pm) {
+		// explode time into parts
+		$parts = array();
+		$parts = explode(':', $time);
+		
+		$second_parts = array();
+		$second_parts = explode(' ', $parts[1]);
+		
+		$parts[1] = $second_parts[0];
+		$parts[2] = $second_parts[1];
+		
+		// calculate minute number of day
+		if($parts[2] == $pm) {
+			$parts[0] = $parts[0] + 12;
+		}
+		
+		$number = $parts[0] * 60 + $parts[1];
+		return $number;
 	}
 }

@@ -61,31 +61,16 @@ class events
 	* @param int $day Day to get
 	* @param int $year Year to get
 	*/
-	public function get_events($limit = false, $descending = false)
+	public function get_events($limit = false, $descending = false, $id = 0)
 	{
 		$events = array();
-		if ($limit == false) {
-			$sql_array = array(
-				'SELECT'		=> '*',
-				'FROM'		=> array(CALENDAR_EVENTS_TABLE => 'c'),
-				'ORDER_BY'	=> 'post_time',
-			);
-			
-			$sql = $this->db->sql_build_query('SELECT', $sql_array);
-			$result = $this->db->sql_query($sql);
-			
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				$events[] = $row;
-			}
-		}
-		else {
-			if($descending == true) {
+		
+		if($id == 0) {
+			if ($limit == false) {
 				$sql_array = array(
 					'SELECT'		=> '*',
 					'FROM'		=> array(CALENDAR_EVENTS_TABLE => 'c'),
-					'ORDER_BY'	=> 'post_time DESC',
-					'LIMIT'		=> $limit,
+					'ORDER_BY'	=> 'post_time',
 				);
 				
 				$sql = $this->db->sql_build_query('SELECT', $sql_array);
@@ -96,9 +81,40 @@ class events
 					$events[] = $row;
 				}
 			}
+			else {
+				if($descending == true) {
+					$sql_array = array(
+						'SELECT'		=> '*',
+						'FROM'		=> array(CALENDAR_EVENTS_TABLE => 'c'),
+						'ORDER_BY'	=> 'post_time DESC',
+						'LIMIT'		=> $limit,
+					);
+					
+					$sql = $this->db->sql_build_query('SELECT', $sql_array);
+					$result = $this->db->sql_query($sql);
+					
+					while ($row = $this->db->sql_fetchrow($result))
+					{
+						$events[] = $row;
+					}
+				}
+			}
+			return $events;
 		}
-		
-		return $events;
+		else {
+			$sql_array = array(
+				'SELECT'		=> '*',
+				'FROM'		=> array(CALENDAR_EVENTS_TABLE => 'c'),
+				'WHERE'		=> 'c.id = ' . $id,
+			);
+			
+			$sql = $this->db->sql_build_query('SELECT', $sql_array);
+			$result = $this->db->sql_query($sql);
+			
+			$event = $this->db->sql_fetchrow($result);
+			
+			return $event;
+		}
 	}
 
 	/**

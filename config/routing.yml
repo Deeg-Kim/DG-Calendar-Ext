@@ -1,12 +1,10 @@
 # main
 main:
-    path: /calendar
-    defaults: { _controller: dg.calendar.controller.main:handle }
-    
-# view
-view:
     path: /calendar/{month}/{year}
-    defaults: { _controller: dg.calendar.controller.main:view }
+    defaults: { _controller: dg.calendar.controller.main:handle, month: NULL, year: NULL }
+    requirements:
+        month: \d+
+        year: \d+
 
 # event
 event:

@@ -1,6 +1,12 @@
 @charset "UTF-8";
 /* CSS Document */
 
+h2.calendar-title {
+	text-align: center;
+	color: black;
+	font-size: 3.5em;
+}
+
 div.calendar-nav-links {
 	font-size: 1.3em;
 }
@@ -16,12 +22,16 @@ thead.calendar-head {
 	font-size: 1.5em;
 }
 
-table.calendar, tr.calendar-row, td.calendar-day, td.calendar-day-head {
+table.calendar, tr.calendar-row, td.calendar-day, td.calendar-day-head, td.calendar-day-np {
 	border: 1px solid #105289;
 }
 
 td.today {
 	background-color: #F6F4D0;
+}
+
+td.calendar-day-np {
+	background-color: #E3E3E3;
 }
 
 div.day-number {
