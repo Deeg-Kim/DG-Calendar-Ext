@@ -5,7 +5,14 @@
 <div id="p1" class="post bg2 has-profile">
 	<div class="inner">
     	<dl class="postprofile" id="profile1">
-         	<dt class="profile">DG Kim</dt>
+         	<dt class="<!-- IF postrow.RANK_TITLE or postrow.RANK_IMG -->has-profile-rank<!-- ELSE -->no-profile-rank<!-- ENDIF --> <!-- IF postrow.POSTER_AVATAR -->has-avatar<!-- ELSE -->no-avatar<!-- ENDIF -->">
+				<div class="avatar-container">
+					<!-- IF EVENT_POSTER_AVATAR -->
+						<!-- IF postrow.U_POST_AUTHOR --><a href="{postrow.U_POST_AUTHOR}" class="avatar">{EVENT_POSTER_AVATAR}</a><!-- ELSE --><span class="avatar">{EVENT_POSTER_AVATAR}</span><!-- ENDIF -->
+					<!-- ENDIF -->
+				</div>
+				{EVENT_POSTER}
+			</dt>
         </dl>
     	<div class="postbody">
             <div class="content">

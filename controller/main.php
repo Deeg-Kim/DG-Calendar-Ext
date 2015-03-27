@@ -74,7 +74,14 @@ class main
 		define('CALENDAR_CONFIG_TABLE', $config_table);
 		define('CALENDAR_EVENTS_TABLE', $events_table);
 		
-		include $this->root_path . 'includes/functions_user.' . $this->php_ext;
+		if (!function_exists('get_username_string'))
+		{
+		   include $this->root_path . 'includes/functions_content.' . $this->php_ext; 
+		} 
+		if (!function_exists('get_user_avatar'))
+		{
+		   include $this->root_path . 'includes/functions_display.' . $this->php_ext; 
+		}
 	}
 
 	/**
@@ -311,11 +318,11 @@ class main
 				 WHERE user_id = ' . $event['user_id'];
 		$result = $this->db->sql_query($sql);
 		$member = $this->db->sql_fetchrow($result);
-		
-		get_username_string("full", $member['user_id'], $member['username'], $member['user_colour']);
-		
+
 		$this->template->assign_vars(array(
+			'EVENT_POSTER_AVATAR'	=> get_user_avatar($member['user_avatar'], $member['user_avatar_type'], $member['user_avatar_width'], $member['user_avatar_height']),
 			'EVENT_CONTENT'			=> $content,
+			'EVENT_POSTER'			=> get_username_string("full", $member['user_id'], $member['username'], $member['user_colour']),
 			'EVENT_TITLE'			=> $event['title'],
 			
 			'U_CALENDAR_PAGE'		=> $this->helper->route('main'),
@@ -346,7 +353,6 @@ class main
 			$result = $this->db->sql_query($sql);
 			$member = $this->db->sql_fetchrow($result);
 			
-			user_get_id_name($user_id_ary, $username_ary);
 			if($i % 2 == 0) {
 				$last_5 .= '<tr class="bg1"><td>' . $events[$i]['title'] . '</td><td>' . get_username_string("full", $member['user_id'], $member['username'], $member['user_colour']) . '</td><td><a href="' . $this->helper->route('event', array('id' =>  $events[$i]['id'])) . '">' . $this->user->lang('VIEW_EVENT') . '</a></td><td>' . date($member['user_dateformat'], $events[$i]['post_time']) . '</td></tr>';
 			}
