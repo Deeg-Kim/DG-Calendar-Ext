@@ -8,7 +8,21 @@ h2.calendar-title {
 }
 
 div.calendar-nav-links {
+	clear: both;
 	font-size: 1.3em;
+}
+
+div.month-jump {
+	clear: both;
+	font-size: 1.3em;
+}
+
+p.jump1 {
+	float: left;
+}
+
+p.jump2 {
+	float: right;
 }
 
 table.calendar {

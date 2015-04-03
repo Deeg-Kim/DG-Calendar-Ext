@@ -119,15 +119,62 @@ class main
 			12  => $this->user->lang('DECEMBER'),
 		);
 		
+		// get the previous and next month
+		if($year == date('Y')) {
+			// previous month
+			if($month == 1) {
+				$previous = $this->helper->route('main', array('month' => 12, 'year' => $year - 1));
+				$previous_month = $month_array[12];
+			}
+			else {
+				$previous = $this->helper->route('main', array('month' => $month - 1));
+				$previous_month = $month_array[$month - 1];
+			}
+			// next month
+			if($month == 12) {
+				$next = $this->helper->route('main', array('month' => 1, 'year' => $year + 1));
+				$next_month = $month_array[1];
+			}
+			else {
+				$next = $this->helper->route('main', array('month' => $month + 1));
+				$next_month = $month_array[$month + 1];
+			}
+		}
+		else {
+			// previous month
+			if($month == 1) {
+				$previous = $this->helper->route('main', array('month' => 12, 'year' => $year - 1));
+				$previous_month = $month_array[12];
+			}
+			else {
+				$previous = $this->helper->route('main', array('month' => $month - 1, 'year' => $year));
+				$previous_month = $month_array[$month - 1];
+			}
+			// next month
+			if($month == 12) {
+				$next = $this->helper->route('main', array('month' => 1, 'year' => $year + 1));
+				$next_month = $month_array[1];
+			}
+			else {
+				$next = $this->helper->route('main', array('month' => $month + 1, 'year' => $year));
+				$next_month = $month_array[$month + 1];
+			}
+		}
+		
 		// assign variables
 		$this->template->assign_vars(array(
 			'U_CALENDAR_PAGE'	=> $this->helper->route('main'),
 			'U_CREATE_LINK'		=> $this->helper->route('create'),
+			'U_MONTH_PREVIOUS'	=> $previous,
+			'U_MONTH_NEXT'		=> $next,
 			
 			'S_CAN_MAKE_EVENT'	=> $this->auth->acl_get('u_new_event'),
 			
 			'CALENDAR_TITLE' 	=> $month_array[$month].' '.$year,
 			'CALENDAR_OUTPUT'	=> $this->draw_calendar($month, $year),
+			
+			'MONTH_PREVIOUS'	=> $previous_month,
+			'MONTH_NEXT'			=> $next_month,
 		));
 		
 		$this->template->assign_block_vars('navlinks', array(
