@@ -24,11 +24,12 @@ class dev_0_1_0 extends \phpbb\db\migration\migration
   public function update_data()
 	{
 		return array(
-      array('permission.add', array('m_calendar')),
+    		array('permission.add', array('m_calendar')),
     
-      array('permission.add', array('u_new_event')),
+	      	array('permission.add', array('u_new_event')),
     
 			array('config.add', array('calendar_dg', 0)),
+			array('config.add', array('calendar_dg_version', '0.1.0')),
 		);
 	}
 
@@ -44,10 +45,10 @@ class dev_0_1_0 extends \phpbb\db\migration\migration
             'month' => array('INT:2', 0),
             'day' => array('INT:2', 0),
             'year' => array('INT:4', 0),
-            'start' => array('VCHAR:255', ''),
-            'end' => array('VCHAR:255', ''),
+            'start' => array('VCHAR:255', NULL),
+            'end' => array('VCHAR:255', NULL),
             'title' => array('VCHAR:255', ''),
-            'description' => array('TEXT', ''),
+            'description' => array('TEXT', NULL),
           ),
           
           'PRIMARY_KEY' => 'id',
@@ -61,7 +62,7 @@ class dev_0_1_0 extends \phpbb\db\migration\migration
 		return array(
 			array('permission.remove', array('m_calendar')),
       
-      array('permission.remove', array('u_new_event')),
+     		array('permission.remove', array('u_new_event')),
 		);
 	}
   
