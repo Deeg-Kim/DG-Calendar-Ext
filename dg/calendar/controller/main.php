@@ -376,7 +376,7 @@ class main
 			'U_EVENT_SELF'			=> $this->helper->route('event', array('id' => $id)),
 		));
 		
-		return $this->helper->render('calendar_event_body.html', $this->user->lang('CREATE_EVENT'));
+		return $this->helper->render('calendar_event_body.html', $event['title']);
 	}
 	
 	/**
