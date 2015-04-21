@@ -87,7 +87,6 @@ class events
 						'SELECT'		=> '*',
 						'FROM'		=> array(CALENDAR_EVENTS_TABLE => 'c'),
 						'ORDER_BY'	=> 'post_time DESC',
-						'LIMIT'		=> $limit,
 					);
 				}
 				else {
@@ -95,12 +94,11 @@ class events
 						'SELECT'		=> '*',
 						'FROM'		=> array(CALENDAR_EVENTS_TABLE => 'c'),
 						'ORDER_BY'	=> 'post_time ASC',
-						'LIMIT'		=> $limit,
 					);
 				}
 					
 				$sql = $this->db->sql_build_query('SELECT', $sql_array);
-				$result = $this->db->sql_query($sql);
+				$result = $this->db->sql_query_limit($sql, $limit);
 					
 				while ($row = $this->db->sql_fetchrow($result))
 				{
