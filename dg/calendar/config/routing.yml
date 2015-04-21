@@ -9,7 +9,7 @@ main:
 # event
 event:
     path: /calendar/event/{id}
-    defaults: { _controller: dg.calendar.controller.main:event }
+    defaults: { _controller: dg.calendar.controller.main:event }, 
 
 # create posts
 create:
