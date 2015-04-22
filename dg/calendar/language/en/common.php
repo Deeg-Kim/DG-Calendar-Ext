@@ -24,6 +24,7 @@ $lang = array_merge($lang, array(
 	
 	'CALENDAR'				=> 'Calendar',
 	'CALENDAR_PAGE'			=> 'Calendar',
+	'COMMENT'				=> 'Comment',
 	'CREATE_EVENT'			=> 'Create Event',
 	
 	'DATE'					=> 'Date',
@@ -31,6 +32,9 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION'			=> 'Description',
 	
 	'END_TIME'				=> 'End Time',
+	'EVENT_BY'				=> 'Event by %s',
+	'EVENT_DELETE'			=> 'Delete event',
+	'EVENT_LOCK'				=> 'Lock event',
 	'EVENT_SUCCESSFUL'		=> 'Event created successfully!',
 	
 	'FEBRUARY'				=> 'February',
@@ -59,6 +63,8 @@ $lang = array_merge($lang, array(
 	'OCTOBER'				=> 'October',
 	
 	'PM'						=> 'PM',
+	
+	'QUICKMOD_TOOLS'		=> 'Quick-mod tools',
 	
 	'RETURN_CALENDAR'		=> 'Return to calendar',
 	

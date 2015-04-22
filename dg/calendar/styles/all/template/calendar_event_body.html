@@ -2,24 +2,58 @@
 
 <h2 class="topic-title"><a href="{U_EVENT_SELF}">{EVENT_TITLE}</a></h2>
 
-<div id="p1" class="post bg2 has-profile">
+<div class="action-bar top">
+	<div class="buttons">
+		<a href="" class="button icon-button reply-icon" title="{L_COMMENT">{L_COMMENT}</a>
+	</div>
+	
+	<div class="pagination">
+		<!-- 1 post &bull; Page <strong>1</strong> of <strong>1</strong> -->
+	</div>
+	
+</div>
+
+<div id="p1" class="post bg2">
 	<div class="inner">
-    	<dl class="postprofile" id="profile1">
-         	<dt class="<!-- IF postrow.RANK_TITLE or postrow.RANK_IMG -->has-profile-rank<!-- ELSE -->no-profile-rank<!-- ENDIF --> <!-- IF postrow.POSTER_AVATAR -->has-avatar<!-- ELSE -->no-avatar<!-- ENDIF -->">
-				<div class="avatar-container">
-					<!-- IF EVENT_POSTER_AVATAR -->
-						<!-- IF postrow.U_POST_AUTHOR --><a href="{postrow.U_POST_AUTHOR}" class="avatar">{EVENT_POSTER_AVATAR}</a><!-- ELSE --><span class="avatar">{EVENT_POSTER_AVATAR}</span><!-- ENDIF -->
-					<!-- ENDIF -->
-				</div>
-				{EVENT_POSTER}
-			</dt>
-        </dl>
-    	<div class="postbody">
-            <div class="content">
-            	{EVENT_CONTENT}
-            </div>
-        </div>
-    </div>
+		<div class="postbody" style="width: 100%;">
+        <h3 class="first">
+        	<a href="#p1">{EVENT_TITLE}</a></h3>
+			<ul class="post-buttons">
+				<li>
+					<a href="" title="Edit post" class="button icon-button edit-icon"><span>Edit</span></a>
+				</li>
+				<li>
+					<a href="" title="Delete post" class="button icon-button delete-icon"><span>Delete</span></a>
+				</li>
+				<li>
+					<a href="" title="Report this post" class="button icon-button report-icon"><span>Report this post</span></a>
+				</li>
+			</ul>
+			<div class="content">
+            	<p class="author">{EVENT_POSTER}</p>
+				{EVENT_CONTENT}
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="action-bar bottom">
+    <div class="buttons">
+		<a href="{U_COMMENT}" class="button icon-button reply-icon" title="{L_COMMENT}">{L_COMMENT}</a>
+	</div>
+	<div class="dropdown-container dropdown-container-left dropdown-up dropdown-right dropdown-button-control" id="quickmod">
+		<span title="Quick-mod tools" class="dropdown-trigger button icon-button modtools-icon dropdown-select">{L_QUICKMOD_TOOLS}</span>
+			<div class="dropdown hidden">
+				<div class="pointer">
+                	<div class="pointer-inner"></div>
+                </div>
+				<ul class="dropdown-contents">
+					<li><a href="" data-ajax="true" data-refresh="true">{L_EVENT_LOCK}</a></li>			
+                    <li><a href="" data-ajax="true" data-refresh="true">{L_EVENT_DELETE}</a></li>							
+				</ul>
+			</div>
+	</div>
+    <div class="clear"></div>    
 </div>
 
 <p class="jumpbox-return"><a href="{U_CALENDAR_PAGE}" class="left-box arrow-left" accesskey="r">{L_RETURN_CALENDAR}</a></p>

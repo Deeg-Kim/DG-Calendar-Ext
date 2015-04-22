@@ -367,9 +367,8 @@ class main
 		$member = $this->db->sql_fetchrow($result);
 
 		$this->template->assign_vars(array(
-			'EVENT_POSTER_AVATAR'	=> get_user_avatar($member['user_avatar'], $member['user_avatar_type'], $member['user_avatar_width'], $member['user_avatar_height']),
 			'EVENT_CONTENT'			=> $content,
-			'EVENT_POSTER'			=> get_username_string("full", $member['user_id'], $member['username'], $member['user_colour']),
+			'EVENT_POSTER'			=> $this->user->lang('EVENT_BY', get_username_string("full", $member['user_id'], $member['username'], $member['user_colour'])),
 			'EVENT_TITLE'			=> $event['title'],
 			
 			'U_CALENDAR_PAGE'		=> $this->helper->route('main'),
