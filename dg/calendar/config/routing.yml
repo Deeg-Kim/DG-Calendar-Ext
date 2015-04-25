@@ -9,9 +9,9 @@ main:
 # event
 event:
     path: /calendar/event/{id}
-    defaults: { _controller: dg.calendar.controller.main:event }, 
+    defaults: { _controller: dg.calendar.controller.main:event }
 
-# create posts
+# create events
 create:
     path: /calendar/create
     defaults: { _controller: dg.calendar.controller.main:create }
@@ -20,3 +20,13 @@ create:
 moderate:
     path: /calendar/moderate
     defaults: { _controller: dg.calendar.controller.main:moderate }
+
+# manage
+manage:
+    path: /calendar/manage/{mode}/{event}
+    defaults: { _controller: dg.calendar.controller.main:manage }
+    
+# event related stuff
+posting:
+    path: /calendar/posting/{mode}/{event}/{post}
+    defaults: { _controller: dg.calendar.controller.main:posting }

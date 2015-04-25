@@ -335,7 +335,7 @@ class main
 			),
 			array(
 				'FORUM_NAME'			=> $this->user->lang('VIEW_EVENT'),
-				'U_VIEW_FORUM'		=> $this->helper->route('moderate'),
+				'U_VIEW_FORUM'		=> $this->helper->route('event', array('id' => $id)),
 			),
 		);
 		
@@ -359,6 +359,21 @@ class main
 			$content .= '<br/><b>' . $this->user->lang('DESCRIPTION') . ':</b> ' . $event['description'];
 		}
 		
+		// see moderator tools
+		$moderator = false;
+		if($this->auth->acl_get('m_calendar')) {
+			$moderator = true;
+		}
+		
+		// edit links
+		if($this->auth->acl_get('m_calendar') || $this->user->data['user_id'] == $event['user_id']) {
+			$this->template->assign_vars(array(
+				'U_DELETE_LINK'		=> $this->helper->route('manage', array('mode' => 'delete', 'event' => $id)),
+			));
+		}
+		
+		// build comments
+		
 		// build user
 		$sql = 'SELECT *
 				 FROM ' . USERS_TABLE . '
@@ -370,6 +385,8 @@ class main
 			'EVENT_CONTENT'			=> $content,
 			'EVENT_POSTER'			=> $this->user->lang('EVENT_BY', get_username_string("full", $member['user_id'], $member['username'], $member['user_colour'])),
 			'EVENT_TITLE'			=> $event['title'],
+			
+			'S_MODERATOR'			=> $moderator,
 			
 			'U_CALENDAR_PAGE'		=> $this->helper->route('main'),
 			'U_EVENT_SELF'			=> $this->helper->route('event', array('id' => $id)),
@@ -436,6 +453,48 @@ class main
 		}
 		
 		return $this->helper->render('calendar_moderate_body.html', $this->user->lang('CALENDAR'));
+	}
+	
+	/**
+	* Controller for route /calendar/manage/{mode}/{event}
+	*
+	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	*/
+	public function manage($mode, $event)
+	{	
+		switch($mode) {
+			case 'delete':
+				// handle permission
+				$perm = false;
+				if($this->auth->acl_get('m_calendar')) {
+					$perm = true;
+				}
+				
+				if($perm) {
+					$this->events->delete_event($event);
+				
+					meta_refresh(3, $this->helper->route('main'));
+					
+					$message =  $this->user->lang['EVENT_DELETE_SUCCESSFUL'] . '<br /><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a>';
+					trigger_error($message);
+				}
+				else {
+					trigger_error('NOT_AUTHORISED');
+				}
+				
+				break;
+			case 'edit':
+				break;
+		}
+	}
+	
+	/**
+	* Controller for route /calendar/posting/{mode}/{event}/{post}
+	*
+	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	*/
+	public function posting($mode, $event, $post)
+	{	
 	}
 	
 	// private methods

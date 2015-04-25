@@ -175,4 +175,15 @@ class events
 		$sql = 'INSERT INTO ' . CALENDAR_EVENTS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_array);
 		$this->db->sql_query($sql);
 	}
+	
+	/**
+	* Delete event
+	*
+	* @param int $id The id of the event
+	*/
+	public function delete_event($id)
+	{
+		$sql = 'DELETE FROM ' . CALENDAR_EVENTS_TABLE . ' WHERE `id` = ' . $id;
+		$this->db->sql_query($sql);
+	}
 }
