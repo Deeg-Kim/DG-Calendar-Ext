@@ -27,8 +27,7 @@ class dev_0_1_1 extends \phpbb\db\migration\migration
 			array('permission.add', array('u_self_edit')),
 			array('permission.add', array('u_self_delete')),
 			array('permission.add', array('u_event_report')),
-		
-			array('config.update', array('calendar_dg', 0)),
+
 			array('config.update', array('calendar_dg_version', '0.1.1')),
 		);
 	}

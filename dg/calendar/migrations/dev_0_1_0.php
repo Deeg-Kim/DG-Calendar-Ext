@@ -18,7 +18,7 @@ class dev_0_1_0 extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\phpbb\db\migration\data\v310\alpha2');
+		return array('\phpbb\db\migration\data\v310\rc6');
 	}
   
   public function update_data()
