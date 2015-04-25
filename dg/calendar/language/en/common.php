@@ -33,9 +33,11 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION'				=> 'Description',
 		
 	'EDIT'						=> 'Edit',
+	'EDIT_EVENT'					=> 'Edit Event',
 	'END_TIME'					=> 'End Time',
 	'EVENT_BY'					=> 'Event by %s',
 	'EVENT_DELETE'				=> 'Delete event',
+	'EVENT_DELETE_CONFIRM'		=> 'Are you sure you want to delete this event?',
 	'EVENT_LOCK'					=> 'Lock event',
 	'EVENT_DELETE_SUCCESSFUL'	=> 'Event deleted successfully!',
 	'EVENT_SUCCESSFUL'			=> 'Event created successfully!',

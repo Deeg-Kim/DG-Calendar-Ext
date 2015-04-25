@@ -1,0 +1,3 @@
+[25-Apr-2015 15:10:14 America/Denver] PHP Catchable fatal error:  Object of class dg\calendar\controller\main could not be converted to string in /home1/cyneerco/public_html/calendar_ext/ext/dg/calendar/controller/main.php on line 374
+[25-Apr-2015 15:10:25 America/Denver] PHP Catchable fatal error:  Object of class dg\calendar\controller\main could not be converted to string in /home1/cyneerco/public_html/calendar_ext/ext/dg/calendar/controller/main.php on line 374
+[25-Apr-2015 15:10:47 America/Denver] PHP Catchable fatal error:  Object of class dg\calendar\controller\main could not be converted to string in /home1/cyneerco/public_html/calendar_ext/ext/dg/calendar/controller/main.php on line 374

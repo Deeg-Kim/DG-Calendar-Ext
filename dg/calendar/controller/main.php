@@ -359,7 +359,7 @@ class main
 			$content .= '<br/><b>' . $this->user->lang('DESCRIPTION') . ':</b> ' . $event['description'];
 		}
 		
-		// see moderator tools
+		// moderator stuff
 		$moderator = false;
 		if($this->auth->acl_get('m_calendar')) {
 			$moderator = true;
@@ -370,8 +370,8 @@ class main
 			));
 		}
 		
-		// report link links
-		if($this->auth->acl_get('m_calendar') || $this->user->data['user_id'] == $event['user_id']) {
+		// delete/edit/report links
+		if($this->user->data['user_id'] == $event['user_id']) {
 			if($this->auth->acl_get('u_self_delete')) {
 				$this->template->assign_vars(array(
 					'U_DELETE_LINK'		=> $this->helper->route('manage', array('mode' => 'delete', 'event' => $id)),
@@ -484,18 +484,41 @@ class main
 		switch($mode) {
 			case 'delete':
 				// handle permission
+				$current = $this->events->get_events(false, false, $event);
+				
 				$perm = false;
 				if($this->auth->acl_get('m_calendar')) {
 					$perm = true;
 				}
 				
-				if($perm) {
-					$this->events->delete_event($event);
+				if($this->user->data['user_id'] == $current['user_id']) {
+					if($this->auth->acl_get('u_self_delete')) {
+						$perm = true;
+					}
+				}
 				
-					meta_refresh(3, $this->helper->route('main'));
-					
-					$message =  $this->user->lang['EVENT_DELETE_SUCCESSFUL'] . '<br /><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a>';
-					trigger_error($message);
+				if($perm) {
+					// check mode
+					if (confirm_box(true))
+					{
+						$this->events->delete_event($event);
+						
+						meta_refresh(3, $this->helper->route('main'));
+							
+						$message =  $this->user->lang['EVENT_DELETE_SUCCESSFUL'] . '<br /><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a>';
+						trigger_error($message);
+					}
+					else
+					{
+						$s_hidden_fields = build_hidden_fields(array(
+							'submit'    => true,
+							'event' 		=> $event,
+							)
+						);
+				
+						//display mode
+						confirm_box(false, 'EVENT_DELETE', $s_hidden_fields);
+					}
 				}
 				else {
 					trigger_error('NOT_AUTHORISED');
@@ -503,6 +526,13 @@ class main
 				
 				break;
 			case 'edit':
+				$event = $this->events->get_events(false, false, $id);
+				
+				$this->template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	 		=> $name['FORUM_NAME'],
+					'U_VIEW_FORUM'		=> $name['U_VIEW_FORUM'],
+				));
+			
 				return $this->helper->render('event_edit_body.html', $this->user->lang('CALENDAR'));
 				break;
 		}

@@ -170,6 +170,7 @@ class events
 			'end'			=> $end,
 			'title'			=> $title,
 			'description'	=> $description,
+			'event_status'	=> 0,
 		);
 		
 		$sql = 'INSERT INTO ' . CALENDAR_EVENTS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_array);
@@ -184,6 +185,17 @@ class events
 	public function delete_event($id)
 	{
 		$sql = 'DELETE FROM ' . CALENDAR_EVENTS_TABLE . ' WHERE `id` = ' . $id;
+		$this->db->sql_query($sql);
+	}
+	
+	/**
+	* Change status
+	*
+	* @param int $id The id of the event
+	*/
+	public function change_event_status($id, $status)
+	{
+		$sql = 'UPDATE ' . CALENDAR_EVENTS_TABLE . ' SET `event_status` = ' . $status . ' WHERE `id` = ' . $id;
 		$this->db->sql_query($sql);
 	}
 }

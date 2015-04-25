@@ -21,7 +21,7 @@
 			<ul class="post-buttons">
             	<!-- IF U_EDIT_LINK -->
 				<li>
-					<a href="" title="{L_EDIT}" class="button icon-button edit-icon"><span>{L_EDIT}</span></a>
+					<a href="{U_EDIT_LINK}" title="{L_EDIT}" class="button icon-button edit-icon"><span>{L_EDIT}</span></a>
 				</li>
                 <!-- ENDIF -->
                 <!-- IF U_DELETE_LINK -->
@@ -31,7 +31,7 @@
                 <!-- ENDIF -->
                 <!-- IF U_REPORT_LINK -->
 				<li>
-					<a href="" title="{L_REPORT}" class="button icon-button report-icon"><span>{L_REPORT}</span></a>
+					<a href={U_REPORT_LINK}"" title="{L_REPORT}" class="button icon-button report-icon"><span>{L_REPORT}</span></a>
 				</li>
                 <!-- ENDIF -->
 			</ul>
@@ -56,7 +56,7 @@
         	</div>
 			<ul class="dropdown-contents">
 				<li><a href="" data-ajax="true" data-refresh="true">{L_EVENT_LOCK}</a></li>			
-        	    <li><a href="" data-ajax="true" data-refresh="true">{L_EVENT_DELETE}</a></li>							
+        	    <li><a href="{U_DELETE_LINK}" data-ajax="true" data-refresh="true">{L_EVENT_DELETE}</a></li>							
 			</ul>
 		</div>
 	</div>
