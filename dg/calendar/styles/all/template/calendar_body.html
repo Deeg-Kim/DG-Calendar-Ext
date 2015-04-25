@@ -7,7 +7,16 @@
         <p class="jumpbox-return jump2"><a href="{U_MONTH_NEXT}" class="left-box arrow-right" accesskey="r">{MONTH_NEXT}</a></p>
     </div>
     <div class="calendar-nav-links">
-        <!-- IF S_CAN_MAKE_EVENT -->[<a href="{U_CREATE_LINK}">{L_NEW_EVENT}</a><!-- ENDIF --><!-- IF U_MODERATE_CALENDAR --> | <a href="{U_MODERATE_CALENDAR}">{L_MODERATE_CALENDAR}</a> <!-- ENDIF --><!-- IF S_CAN_MAKE_EVENT -->]<!-- ENDIF -->
+    	<!-- IF S_CAN_MAKE_EVENT -->
+    	<div class="buttons">
+            <a href="{U_CREATE_LINK}" class="button icon-button reply-icon" title="{L_NEW_EVENT}">{L_NEW_EVENT}</a>
+        </div>
+        <!-- ENDIF -->
+        <!-- IF U_MODERATE_CALENDAR -->
+        <div style="float: right;">
+        	[<a href="{U_MODERATE_CALENDAR}">{L_MODERATE_CALENDAR}</a>]
+        </div>
+        <!-- ENDIF -->
     </div>
 	{CALENDAR_OUTPUT}
 </div>
