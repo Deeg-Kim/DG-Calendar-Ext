@@ -35,8 +35,9 @@ class dev_0_1_1 extends \phpbb\db\migration\migration
   	public function revert_data()
 	{
 		return array(
-			array('permission.remove', array('m_calendar')),
-     		array('permission.remove', array('u_new_event')),
+			array('permission.remove', array('u_self_edit')),
+			array('permission.remove', array('u_self_delete')),
+			array('permission.remove', array('u_event_report')),
 		);
 	}
   

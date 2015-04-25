@@ -18,7 +18,7 @@ class dev_0_1_0 extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\phpbb\db\migration\data\v310\rc6');
+		return array('\phpbb\db\migration\data\v310\extensions');
 	}
   
   public function update_data()
@@ -36,24 +36,24 @@ class dev_0_1_0 extends \phpbb\db\migration\migration
 	public function update_schema()
 	{
 		return array(
-      'add_tables' => array(
-        $this->table_prefix . 'calendar_events' => array(
-          'COLUMNS' => array(
-            'id' => array('INT:11', NULL, 'auto_increment'),
-            'user_id' => array('INT:8', 0),
-            'post_time' => array('INT:11', 0),
-            'month' => array('INT:2', 0),
-            'day' => array('INT:2', 0),
-            'year' => array('INT:4', 0),
-            'start' => array('VCHAR:255', NULL),
-            'end' => array('VCHAR:255', NULL),
-            'title' => array('VCHAR:255', ''),
-            'description' => array('TEXT', NULL),
-          ),
-          
-          'PRIMARY_KEY' => 'id',
-        ),
-      ),
+			'add_tables' => array(
+				$this->table_prefix . 'calendar_events' => array(
+			  		'COLUMNS' => array(
+					'id' => array('INT:11', NULL, 'auto_increment'),
+					'user_id' => array('INT:8', 0),
+					'post_time' => array('INT:11', 0),
+					'month' => array('INT:2', 0),
+					'day' => array('INT:2', 0),
+					'year' => array('INT:4', 0),
+					'start' => array('VCHAR:255', NULL),
+					'end' => array('VCHAR:255', NULL),
+					'title' => array('VCHAR:255', ''),
+					'description' => array('TEXT', NULL),
+			  	),
+			  
+				'PRIMARY_KEY' => 'id',
+				),
+			),
 		);
 	}
   
