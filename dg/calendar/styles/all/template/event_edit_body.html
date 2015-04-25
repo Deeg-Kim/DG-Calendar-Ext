@@ -1,0 +1,85 @@
+<!-- INCLUDE overall_header.html -->
+
+<h2 class="posting-title"><a href="{U_CALENDAR_PAGE}">{L_CALENDAR}</a></h2>
+
+<form id="postform" method="post" action="{S_CREATE_ACTION}" enctype="multipart/form-data">
+	<div class="panel" id="postingbox">
+		<div class="inner">
+			<h3>{L_CREATE_EVENT}</h3>
+            <!-- IF S_HAS_ERRORS -->
+                <p class="error">
+                {ERRORS}
+                </p>
+            <!-- ENDIF -->
+			<fieldset class="fields1">
+				<dl style="clear: left;">
+					<dt><label for="title">{L_TITLE}:</label></dt>
+					<dd><input type="text" name="title" id="title" size="45" maxlength="255" tabindex="1" value="" class="inputbox autowidth" /></dd>
+				</dl>
+				
+				<dl style="clear: left;">
+					<dt><label for="date">{L_DATE}:</label></dt>
+					<dd>
+						<select name="month" id="month" tabindex="2">
+						{MONTHS_OPTIONS}
+						</select>
+						
+						<select name="day" id="day" tabindex="3">
+						{DAYS_OPTIONS}
+						</select>
+						
+						<input type="text" name="year" id="year" size="4" maxlength="4" tabindex="4" class="inputbox autowidth" value="{YEAR}" />
+					</dd>
+				</dl>
+				
+				<dl style="clear: left;">
+					<dt><label for="date">{L_START_TIME}:</label><br /><span>{L_FIELD_OPTIONAL}</span></dt>
+					<dd>
+						<select name="start_hour" id="month" tabindex="5">
+						{HOURS_OPTIONS}
+						</select>
+						
+						<select name="start_minute" id="day" tabindex="6">
+						{MINUTES_OPTIONS}
+						</select>
+						
+						<select name="start_meridiem" id="day" tabindex="7">
+						{MERIDIEM_OPTIONS}
+						</select>
+					</dd>
+				</dl>
+				
+				<dl style="clear: left;">
+					<dt><label for="date">{L_END_TIME}:</label><br /><span>{L_FIELD_OPTIONAL}</span></dt>
+					<dd>
+						<select name="end_hour" id="month" tabindex="8">
+						{HOURS_OPTIONS}
+						</select>
+						
+						<select name="end_minute" id="day" tabindex="9">
+						{MINUTES_OPTIONS}
+						</select>
+						
+						<select name="end_meridiem" id="day" tabindex="10">
+						{MERIDIEM_OPTIONS}
+						</select>
+					</dd>
+				</dl>
+				
+				<dl style="clear: left;">
+					<dt><label for="message">{L_DESCRIPTION}:</label><br /><span>{L_FIELD_OPTIONAL}</span></dt>
+				</dl>
+				<textarea name="description" id="description" rows="10" cols="50" tabindex="11" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" class="inputbox"></textarea>
+			</fieldset>
+		</div>
+	</div>
+    <div class="panel bg2">
+        <div class="inner">
+            <fieldset class="submit-buttons">		
+                <input type="submit" accesskey="s" tabindex="12" name="post" value="{L_SUBMIT}" class="button1 default-submit-action" />&nbsp;
+            </fieldset>
+        </div>
+    </div>
+</form>
+
+<!-- INCLUDE overall_footer.html -->

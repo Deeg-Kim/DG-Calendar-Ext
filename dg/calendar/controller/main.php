@@ -363,13 +363,32 @@ class main
 		$moderator = false;
 		if($this->auth->acl_get('m_calendar')) {
 			$moderator = true;
-		}
-		
-		// edit links
-		if($this->auth->acl_get('m_calendar') || $this->user->data['user_id'] == $event['user_id']) {
 			$this->template->assign_vars(array(
 				'U_DELETE_LINK'		=> $this->helper->route('manage', array('mode' => 'delete', 'event' => $id)),
+				'U_EDIT_LINK'		=> $this->helper->route('manage', array('mode' => 'edit', 'event' => $id)),
+				'U_REPORT_LINK'		=> $this->helper->route('manage', array('mode' => 'report', 'event' => $id)),
 			));
+		}
+		
+		// report link links
+		if($this->auth->acl_get('m_calendar') || $this->user->data['user_id'] == $event['user_id']) {
+			if($this->auth->acl_get('u_self_delete')) {
+				$this->template->assign_vars(array(
+					'U_DELETE_LINK'		=> $this->helper->route('manage', array('mode' => 'delete', 'event' => $id)),
+				));
+			}
+			
+			if($this->auth->acl_get('u_self_edit')) {
+				$this->template->assign_vars(array(
+					'U_EDIT_LINK'		=> $this->helper->route('manage', array('mode' => 'edit', 'event' => $id)),
+				));
+			}
+			
+			if($this->auth->acl_get('u_event_report')) {
+				$this->template->assign_vars(array(
+					'U_REPORT_LINK'		=> $this->helper->route('manage', array('mode' => 'report', 'event' => $id)),
+				));
+			}
 		}
 		
 		// build comments
@@ -484,6 +503,7 @@ class main
 				
 				break;
 			case 'edit':
+				return $this->helper->render('event_edit_body.html', $this->user->lang('CALENDAR'));
 				break;
 		}
 	}

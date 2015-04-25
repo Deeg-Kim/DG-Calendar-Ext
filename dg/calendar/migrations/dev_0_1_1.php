@@ -11,11 +11,6 @@ namespace dg\calendar\migrations;
 
 class dev_0_1_1 extends \phpbb\db\migration\migration
 {
-	public function effectively_installed()
-	{
-		return isset($this->config['calendar_dg']);
-	}
-
 	static public function depends_on()
 	{
 		return array('\dg\calendar\migrations\dev_0_1_0');
@@ -29,6 +24,17 @@ class dev_0_1_1 extends \phpbb\db\migration\migration
 			array('permission.add', array('u_event_report')),
 
 			array('config.update', array('calendar_dg_version', '0.1.1')),
+		);
+	}
+	
+	public function update_schema()
+	{
+		return array(
+			'add_columns'	=> array(
+				$this->table_prefix . 'calendar_events' => array(
+					'event_status' => array('INT:2', 0),
+				),
+			),
 		);
 	}
   

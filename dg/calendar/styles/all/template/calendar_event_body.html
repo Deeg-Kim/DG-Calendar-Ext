@@ -17,20 +17,24 @@
 	<div class="inner">
 		<div class="postbody" style="width: 100%;">
         <h3 class="first">
-        	<a href="#p1">{EVENT_TITLE}</a></h3>
-            <!-- IF U_DELETE_LINK -->
+        	<a href="#p1">{EVENT_TITLE}</a></h3>     
 			<ul class="post-buttons">
+            	<!-- IF U_EDIT_LINK -->
 				<li>
 					<a href="" title="{L_EDIT}" class="button icon-button edit-icon"><span>{L_EDIT}</span></a>
 				</li>
+                <!-- ENDIF -->
+                <!-- IF U_DELETE_LINK -->
 				<li>
 					<a href="{U_DELETE_LINK}" title="{L_DELETE}" class="button icon-button delete-icon"><span>{L_DELETE}</span></a>
 				</li>
+                <!-- ENDIF -->
+                <!-- IF U_REPORT_LINK -->
 				<li>
 					<a href="" title="{L_REPORT}" class="button icon-button report-icon"><span>{L_REPORT}</span></a>
 				</li>
+                <!-- ENDIF -->
 			</ul>
-            <!-- ENDIF -->
 			<div class="content">
             	<p class="author">{EVENT_POSTER}</p>
 				{EVENT_CONTENT}

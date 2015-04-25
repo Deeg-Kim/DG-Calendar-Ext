@@ -91,6 +91,7 @@ $lang = array_merge($lang, array(
 	'YEAR'						=> 'Year',
 	
 	// permissions
+	'ACL_U_EVENT_REPORT'		=> 'Can report events',
 	'ACL_U_NEW_EVENT'			=> 'Can create events',
 	'ACL_U_SELF_DELETE'			=> 'Can delete own events',
 	'ACL_U_SELF_EDIT'			=> 'Can edit own events',
