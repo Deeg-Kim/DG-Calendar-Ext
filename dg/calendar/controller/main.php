@@ -196,6 +196,11 @@ class main
 			trigger_error('NOT_AUTHORISED');
 		}
 		
+		$this->template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'			=> $this->user->lang('CALENDAR_PAGE'),
+			'U_VIEW_FORUM'		=> $this->helper->route('main'),
+		));
+		
 		$submit = (isset($_POST['post'])) ? true : false;
 		
 		// get data from form
@@ -364,9 +369,9 @@ class main
 		if($this->auth->acl_get('m_calendar')) {
 			$moderator = true;
 			$this->template->assign_vars(array(
-				'U_DELETE_LINK'		=> $this->helper->route('manage', array('mode' => 'delete', 'event' => $id)),
-				'U_EDIT_LINK'		=> $this->helper->route('manage', array('mode' => 'edit', 'event' => $id)),
-				'U_REPORT_LINK'		=> $this->helper->route('manage', array('mode' => 'report', 'event' => $id)),
+				'U_DELETE_LINK'		=> $this->helper->route('manage', array('mode' => 'delete', 'id' => $id)),
+				'U_EDIT_LINK'		=> $this->helper->route('manage', array('mode' => 'edit', 'id' => $id)),
+				'U_REPORT_LINK'		=> $this->helper->route('manage', array('mode' => 'report', 'id' => $id)),
 			));
 		}
 		
@@ -374,19 +379,19 @@ class main
 		if($this->user->data['user_id'] == $event['user_id']) {
 			if($this->auth->acl_get('u_self_delete')) {
 				$this->template->assign_vars(array(
-					'U_DELETE_LINK'		=> $this->helper->route('manage', array('mode' => 'delete', 'event' => $id)),
+					'U_DELETE_LINK'		=> $this->helper->route('manage', array('mode' => 'delete', 'id' => $id)),
 				));
 			}
 			
 			if($this->auth->acl_get('u_self_edit')) {
 				$this->template->assign_vars(array(
-					'U_EDIT_LINK'		=> $this->helper->route('manage', array('mode' => 'edit', 'event' => $id)),
+					'U_EDIT_LINK'		=> $this->helper->route('manage', array('mode' => 'edit', 'id' => $id)),
 				));
 			}
 			
 			if($this->auth->acl_get('u_event_report')) {
 				$this->template->assign_vars(array(
-					'U_REPORT_LINK'		=> $this->helper->route('manage', array('mode' => 'report', 'event' => $id)),
+					'U_REPORT_LINK'		=> $this->helper->route('manage', array('mode' => 'report', 'id' => $id)),
 				));
 			}
 		}
@@ -475,29 +480,30 @@ class main
 	}
 	
 	/**
-	* Controller for route /calendar/manage/{mode}/{event}
+	* Controller for route /calendar/manage/{mode}/{id}
 	*
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	*/
-	public function manage($mode, $event)
+	public function manage($mode, $id)
 	{	
 		switch($mode) {
 			case 'delete':
 				// handle permission
-				$current = $this->events->get_events(false, false, $event);
+				$event = $this->events->get_events(false, false, $id);
 				
 				$perm = false;
 				if($this->auth->acl_get('m_calendar')) {
 					$perm = true;
 				}
 				
-				if($this->user->data['user_id'] == $current['user_id']) {
+				if($this->user->data['user_id'] == $event['user_id']) {
 					if($this->auth->acl_get('u_self_delete')) {
 						$perm = true;
 					}
 				}
 				
 				if($perm) {
+					$submit = request_var('submit', 0);
 					// check mode
 					if (confirm_box(true))
 					{
@@ -510,14 +516,22 @@ class main
 					}
 					else
 					{
-						$s_hidden_fields = build_hidden_fields(array(
-							'submit'    => true,
-							'event' 		=> $event,
-							)
-						);
-				
-						//display mode
-						confirm_box(false, 'EVENT_DELETE', $s_hidden_fields);
+						if($submit) {
+							meta_refresh(3, $this->helper->route('event', array('id' => $id)));
+							
+							$message =  $this->user->lang['EVENT_NOT_DELETED'] . '<br /><br /><a href="' . $this->helper->route('event', array('id' => $id)) .'">'. $this->user->lang['RETURN_EVENT'] . '</a>';
+							trigger_error($message);
+						}
+						else {
+							$s_hidden_fields = build_hidden_fields(array(
+								'submit'    => true,
+								'event' 		=> $event,
+								)
+							);
+					
+							//display mode
+							confirm_box(false, 'EVENT_DELETE', $s_hidden_fields);
+						}
 					}
 				}
 				else {
@@ -528,10 +542,253 @@ class main
 			case 'edit':
 				$event = $this->events->get_events(false, false, $id);
 				
+				$perm = false;
+				if($this->auth->acl_get('m_calendar')) {
+					$perm = true;
+				}
+				
+				if($this->user->data['user_id'] == $event['user_id']) {
+					if($this->auth->acl_get('u_self_edit')) {
+						$perm = true;
+					}
+				}
+				
+				if(!$perm) {
+					trigger_error('NOT_AUTHORISED');
+				}
+				
 				$this->template->assign_block_vars('navlinks', array(
-					'FORUM_NAME'	 		=> $name['FORUM_NAME'],
-					'U_VIEW_FORUM'		=> $name['U_VIEW_FORUM'],
+					'FORUM_NAME'			=> $this->user->lang('CALENDAR_PAGE'),
+					'U_VIEW_FORUM'		=> $this->helper->route('main'),
 				));
+				
+				$submit = (isset($_POST['post'])) ? true : false;
+		
+				// get data from form
+				$user_id 		= $this->user->data['user_id'];
+				$title 			= request_var('title', '');
+				$month 			= request_var('month', 0);
+				$day			= request_var('day', 0);
+				$year			= request_var('year', 0);
+				if(request_var('start_hour', 0) == -1 || request_var('start_minute', 0) == -1 || request_var('end_hour', 0) == -1 || request_var('end_minute', 0) == -1 || request_var('start_meridiem', '') == '--' || request_var('end_meridiem', '') == '--') {
+					$start_time = NULL;
+					$end_time	= NULL;
+				}
+				else {
+					$start_time		= request_var('start_hour', 0) . ':' . str_pad(request_var('start_minute', 0), 2, '0', STR_PAD_LEFT) . ' ' . request_var('start_meridiem', '');
+					$end_time		= request_var('end_hour', 0) . ':' . str_pad(request_var('end_minute', 0), 2, '0', STR_PAD_LEFT) . ' ' . request_var('end_meridiem', '');
+				}
+				$description	= request_var('description', '');
+				if($description == '') {
+					$description = NULL;
+				}
+				
+				// build error array
+				$errors = array();
+				if($submit) {
+					if (strlen($title) == 0) {
+						$errors[] = $this->user->lang('FIELD_REQUIRED', $this->user->lang('TITLE'));
+					}
+					if ($year == '') {
+						$errors[] = $this->user->lang('FIELD_REQUIRED', $this->user->lang('YEAR'));
+					}
+					if ($this->time_to_number($start_time, $this->user->lang('PM')) > $this->time_to_number($end_time, $this->user->lang('PM'))) {
+						$errors[] = $this->user->lang('WRONG_TIME');
+					}
+				}
+				
+				// if no error
+				if($submit && empty($errors)) {
+					$this->events->edit_event($user_id, time(), $month, $day, $year, $start_time, $end_time, $title, $description);
+					
+					meta_refresh(3, $this->helper->route('main'));
+					
+					$message =  $this->user->lang['EVENT_SUCCESSFUL'] . '<br /><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a>';
+					trigger_error($message);
+				}
+				// if not submitted
+				else {
+					$e_action = $this->helper->route('manage', array('mode' => 'edit', 'id' => $id));
+					
+					$month_array = array(
+						1   => $this->user->lang('JANUARY'),
+						2   => $this->user->lang('FEBRUARY'),
+						3   => $this->user->lang('MARCH'),
+						4   => $this->user->lang('APRIL'),
+						5   => $this->user->lang('MAY'),
+						6   => $this->user->lang('JUNE'),
+						7   => $this->user->lang('JULY'),
+						8   => $this->user->lang('AUGUST'),
+						9   => $this->user->lang('SEPTEMBER'),
+						10  => $this->user->lang('OCTOBER'),
+						11  => $this->user->lang('NOVEMBER'),
+						12  => $this->user->lang('DECEMBER'),
+					);
+					
+					$meridiem_array = array($this->user->lang('AM'), $this->user->lang('PM'));
+					
+					// make default be the event
+					print_r($event);
+					$months_options = "";
+					$i = 1;
+					foreach($month_array as $month) {
+						if($i == $event['month']) {
+							$months_options .= '<option value=' . $i . ' selected="selected">' . $month .'</option>';
+						}
+						else {
+							$months_options .= '<option value=' . $i . '>' . $month .'</option>';
+						}
+						$i++;
+					}
+					
+					$days_options = "";
+					for($i = 1; $i <= 31; $i++) {
+						if($i == $event['day']) {
+							$days_options .= '<option value=' . $i . ' selected="selected">' . $i .'</option>';
+						}
+						else {
+							$days_options .= '<option value=' . $i . '>' . $i .'</option>';
+						}
+					}
+					
+					$start = $this->explode_time($event['start']);
+					
+					$hours_options_start = "";
+					if($start[0] == '') {
+						$hours_options_start .= '<option value="-1" selected="selected">--</option>';
+						for($i = 1; $i <= 12; $i++) {
+							$hours_options_start .= '<option value=' . $i . '>' . $i .'</option>';
+						}
+					}
+					else {
+						$hours_options_start .= '<option value="-1">--</option>';
+						for($i = 1; $i <= 12; $i++) {
+							if($start[0] == $i) {
+								$hours_options_start .= '<option value=' . $i . ' selected="selected">' . $i .'</option>';
+							}
+							else {
+								$hours_options_start .= '<option value=' . $i . '>' . $i .'</option>';
+							}
+						}
+					}
+					
+					$minutes_options_start = "";
+					if($start[1] == '') {
+						$minutes_options_start .= '<option value="-1" selected="selected">--</option>';
+						for($i = 0; $i < 12; $i++) {
+							$minutes_options_start .= '<option value=' . str_pad($i * 5, 2, '0', STR_PAD_LEFT) . '>' . str_pad($i * 5, 2, '0', STR_PAD_LEFT) .'</option>';
+						}
+					}
+					else {
+						$minutes_options_start .= '<option value="-1">--</option>';
+						for($i = 0; $i < 12; $i++) {
+							if($start[1] == str_pad($i * 5, 2, '0', STR_PAD_LEFT)) {
+								$minutes_options_start .= '<option value=' . str_pad($i * 5, 2, '0', STR_PAD_LEFT) . ' selected="selected">' . str_pad($i * 5, 2, '0', STR_PAD_LEFT) .'</option>';
+							}
+							else {
+								$minutes_options_start .= '<option value=' . str_pad($i * 5, 2, '0', STR_PAD_LEFT) . '>' . str_pad($i * 5, 2, '0', STR_PAD_LEFT) .'</option>';
+							}
+						}
+					}
+					
+					$meridiem_options_start = "";
+					if($start[2] == '') {
+						$meridiem_options_start .= '<option value="--" selected="selected">--</option>';
+						foreach($meridiem_array as $option) {
+							$meridiem_options_start .= '<option value=' . $option . '>' . $option . '</option>';
+						}
+					}
+					else {
+						$meridiem_options_start .= '<option value="--">--</option>';
+						foreach($meridiem_array as $option) {
+							if($start[2] == $option) {
+								$meridiem_options_start .= '<option value=' . $option . ' selected="selected">' . $option . '</option>';
+							}
+							else {
+								$meridiem_options_start .= '<option value=' . $option . '>' . $option . '</option>';
+							}
+						}
+					}
+					
+					$end = $this->explode_time($event['end']);
+					
+					$hours_options_end = "";
+					if($end[0] == '') {
+						$hours_options_end .= '<option value="-1" selected="selected">--</option>';
+						for($i = 1; $i <= 12; $i++) {
+							$hours_options_end .= '<option value=' . $i . '>' . $i .'</option>';
+						}
+					}
+					else {
+						$hours_options_end .= '<option value="-1">--</option>';
+						for($i = 1; $i <= 12; $i++) {
+							if($end[0] == $i) {
+								$hours_options_end .= '<option value=' . $i . ' selected="selected">' . $i .'</option>';
+							}
+							else {
+								$hours_options_end .= '<option value=' . $i . '>' . $i .'</option>';
+							}
+						}
+					}
+					
+					$minutes_options_end = "";
+					if($end[1] == '') {
+						$minutes_options_end .= '<option value="-1" selected="selected">--</option>';
+						for($i = 0; $i < 12; $i++) {
+							$minutes_options_end .= '<option value=' . str_pad($i * 5, 2, '0', STR_PAD_LEFT) . '>' . str_pad($i * 5, 2, '0', STR_PAD_LEFT) .'</option>';
+						}
+					}
+					else {
+						$minutes_options_end .= '<option value="-1">--</option>';
+						for($i = 0; $i < 12; $i++) {
+							if($end[1] == str_pad($i * 5, 2, '0', STR_PAD_LEFT)) {
+								$minutes_options_end .= '<option value=' . str_pad($i * 5, 2, '0', STR_PAD_LEFT) . ' selected="selected">' . str_pad($i * 5, 2, '0', STR_PAD_LEFT) .'</option>';
+							}
+							else {
+								$minutes_options_end .= '<option value=' . str_pad($i * 5, 2, '0', STR_PAD_LEFT) . '>' . str_pad($i * 5, 2, '0', STR_PAD_LEFT) .'</option>';
+							}
+						}
+					}
+					
+					$meridiem_options_end = "";
+					if($end[2] == '') {
+						$meridiem_options_end .= '<option value="--" selected="selected">--</option>';
+						foreach($meridiem_array as $option) {
+							$meridiem_options_end .= '<option value=' . $option . '>' . $option . '</option>';
+						}
+					}
+					else {
+						$meridiem_options_start .= '<option value="--">--</option>';
+						foreach($meridiem_array as $option) {
+							if($end[2] == $option) {
+								$meridiem_options_end .= '<option value=' . $option . ' selected="selected">' . $option . '</option>';
+							}
+							else {
+								$meridiem_options_end .= '<option value=' . $option . '>' . $option . '</option>';
+							}
+						}
+					}
+					
+					$this->template->assign_vars(array(
+						'S_EDIT_ACTION'				=> $e_action,
+						'S_HAS_ERRORS'				=> !empty($errors),
+					
+						'U_CALENDAR_PAGE'			=> $this->helper->route('main'),
+						
+						'DAYS_OPTIONS'				=> $days_options,
+						'DESCRIPTION'				=> $event['description'],
+						'ERRORS'					=> implode($errors, '<br />'),
+						'HOURS_OPTIONS_START'		=> $hours_options_start,
+						'HOURS_OPTIONS_END'			=> $hours_options_end,
+						'MERIDIEM_OPTIONS_START'	=> $meridiem_options_start,
+						'MERIDIEM_OPTIONS_END'		=> $meridiem_options_end,
+						'MINUTES_OPTIONS_START'		=> $minutes_options_start,
+						'MINUTES_OPTIONS_END'		=> $minutes_options_end,
+						'MONTHS_OPTIONS'			=> $months_options,
+						'TITLE'						=> $event['title'],
+						'YEAR'						=> $event['year'],
+					));
+				}
 			
 				return $this->helper->render('event_edit_body.html', $this->user->lang('CALENDAR'));
 				break;
@@ -543,7 +800,7 @@ class main
 	*
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	*/
-	public function posting($mode, $event, $post)
+	public function posting($mode, $id, $post)
 	{	
 	}
 	
@@ -657,5 +914,19 @@ class main
 		
 		$number = $parts[0] * 60 + $parts[1];
 		return $number;
+	}
+	
+	public function explode_time($time) {
+		// explode time into parts
+		$parts = array();
+		$parts = explode(':', $time);
+		
+		$second_parts = array();
+		$second_parts = explode(' ', $parts[1]);
+		
+		$parts[1] = $second_parts[0];
+		$parts[2] = $second_parts[1];
+		
+		return $parts;
 	}
 }

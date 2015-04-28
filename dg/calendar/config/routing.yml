@@ -23,10 +23,10 @@ moderate:
 
 # manage
 manage:
-    path: /calendar/manage/{mode}/{event}
+    path: /calendar/manage/{mode}/{id}
     defaults: { _controller: dg.calendar.controller.main:manage }
     
 # event related stuff
 posting:
-    path: /calendar/posting/{mode}/{event}/{post}
+    path: /calendar/posting/{mode}/{id}/{post}
     defaults: { _controller: dg.calendar.controller.main:posting }

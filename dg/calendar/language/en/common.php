@@ -38,8 +38,9 @@ $lang = array_merge($lang, array(
 	'EVENT_BY'					=> 'Event by %s',
 	'EVENT_DELETE'				=> 'Delete event',
 	'EVENT_DELETE_CONFIRM'		=> 'Are you sure you want to delete this event?',
-	'EVENT_LOCK'					=> 'Lock event',
 	'EVENT_DELETE_SUCCESSFUL'	=> 'Event deleted successfully!',
+	'EVENT_LOCK'					=> 'Lock event',
+	'EVENT_NOT_DELETED'			=> 'Event not deleted.',
 	'EVENT_SUCCESSFUL'			=> 'Event created successfully!',
 	
 	'FEBRUARY'					=> 'February',
@@ -73,6 +74,7 @@ $lang = array_merge($lang, array(
 	
 	'REPORT'						=> 'Report',
 	'RETURN_CALENDAR'			=> 'Return to calendar',
+	'RETURN_EVENT'				=> 'Return to event',
 	
 	'THURSDAY'					=> 'Thursday',
 	'TITLE'						=> 'Title',
