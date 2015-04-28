@@ -599,11 +599,11 @@ class main
 				
 				// if no error
 				if($submit && empty($errors)) {
-					$this->events->edit_event($user_id, time(), $month, $day, $year, $start_time, $end_time, $title, $description);
+					$this->events->edit_event($id, $user_id, $month, $day, $year, $start_time, $end_time, $title, $description);
 					
 					meta_refresh(3, $this->helper->route('main'));
 					
-					$message =  $this->user->lang['EVENT_SUCCESSFUL'] . '<br /><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a>';
+					$message =  $this->user->lang['EVENT_SUCCESSFUL_EDIT'] . '<br /><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a>';
 					trigger_error($message);
 				}
 				// if not submitted
@@ -628,7 +628,6 @@ class main
 					$meridiem_array = array($this->user->lang('AM'), $this->user->lang('PM'));
 					
 					// make default be the event
-					print_r($event);
 					$months_options = "";
 					$i = 1;
 					foreach($month_array as $month) {

@@ -42,6 +42,7 @@ $lang = array_merge($lang, array(
 	'EVENT_LOCK'					=> 'Lock event',
 	'EVENT_NOT_DELETED'			=> 'Event not deleted.',
 	'EVENT_SUCCESSFUL'			=> 'Event created successfully!',
+	'EVENT_SUCCESSFUL_EDIT'		=> 'Event edited successfully!',
 	
 	'FEBRUARY'					=> 'February',
 	'FIELD_OPTIONAL'			=> 'This field optional',

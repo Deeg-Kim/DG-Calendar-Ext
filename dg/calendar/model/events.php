@@ -154,9 +154,15 @@ class events
 	/**
 	* New event
 	*
+	* @param int $user_id User ID of poster
+	* @param int $timestamp Posting timestamp
 	* @param int $month Month of event
 	* @param int $day Day of event
 	* @param int $year Year of event
+	* @param string $start Start time
+	* @param string $end End time
+	* @param string $title Title of event
+	* @param string $description Event description
 	*/
 	public function add_event($user_id, $timestamp, $month, $day, $year, $start, $end, $title, $description)
 	{
@@ -174,6 +180,36 @@ class events
 		);
 		
 		$sql = 'INSERT INTO ' . CALENDAR_EVENTS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_array);
+		$this->db->sql_query($sql);
+	}
+	
+	/**
+	* Edit event
+	*
+	* @param int $id ID of event
+	* @param int $user_id User ID of editor
+	* @param int $month Month of event
+	* @param int $day Day of event
+	* @param int $year Year of event
+	* @param string $start Start time
+	* @param string $end End time
+	* @param string $title Title of event
+	* @param string $description Event description
+	*/
+	public function edit_event($id, $user_id, $month, $day, $year, $start, $end, $title, $description)
+	{
+		$sql_array = array(
+			'user_id'		=> $user_id,
+			'month'			=> $month,
+			'day'			=> $day,
+			'year'			=> $year,
+			'start'			=> $start,
+			'end'			=> $end,
+			'title'			=> $title,
+			'description'	=> $description,
+		);
+		
+		$sql = 'UPDATE ' . CALENDAR_EVENTS_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_array) . ' WHERE `id` = ' . $id;
 		$this->db->sql_query($sql);
 	}
 	
