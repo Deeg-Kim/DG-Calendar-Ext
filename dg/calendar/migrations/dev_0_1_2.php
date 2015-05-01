@@ -19,6 +19,9 @@ class dev_0_1_1 extends \phpbb\db\migration\migration
  	public function update_data()
 	{
 		return array(
+			array('permission.add', array('u_self_lock')),
+			array('permission.add', array('u_event_invite')),
+		
 			array('config.update', array('calendar_dg_version', '0.1.2')),
 		);
 	}
@@ -32,6 +35,8 @@ class dev_0_1_1 extends \phpbb\db\migration\migration
   	public function revert_data()
 	{
 		return array(
+			array('permission.remove', array('u_self_lock')),
+			array('permission.remove', array('u_event_invite')),
 		);
 	}
   

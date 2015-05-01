@@ -507,7 +507,7 @@ class main
 					// check mode
 					if (confirm_box(true))
 					{
-						$this->events->delete_event($event);
+						$this->events->delete_event($id);
 						
 						meta_refresh(3, $this->helper->route('main'));
 							
@@ -538,6 +538,9 @@ class main
 					trigger_error('NOT_AUTHORISED');
 				}
 				
+				break;
+			case 'lock':
+			
 				break;
 			case 'edit':
 				$event = $this->events->get_events(false, false, $id);
