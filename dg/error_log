@@ -1,1 +1,0 @@
-[27-Apr-2015 22:54:23 America/Denver] PHP Fatal error:  Call to undefined method dg\calendar\model\events::edit_event() in /home1/cyneerco/public_html/calendar_ext/ext/dg/calendar/controller/main.php on line 602
