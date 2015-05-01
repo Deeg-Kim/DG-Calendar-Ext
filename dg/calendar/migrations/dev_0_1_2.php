@@ -9,7 +9,7 @@
 
 namespace dg\calendar\migrations;
 
-class dev_0_1_1 extends \phpbb\db\migration\migration
+class dev_0_1_2 extends \phpbb\db\migration\migration
 {
 	static public function depends_on()
 	{
@@ -21,28 +21,18 @@ class dev_0_1_1 extends \phpbb\db\migration\migration
 		return array(
 			array('permission.add', array('u_self_lock')),
 			array('permission.add', array('u_event_invite')),
+			array('permission.add', array('u_event_invite_self')),
 		
 			array('config.update', array('calendar_dg_version', '0.1.2')),
 		);
 	}
 	
-	public function update_schema()
-	{
-		return array(
-		);
-	}
-  
   	public function revert_data()
 	{
 		return array(
 			array('permission.remove', array('u_self_lock')),
 			array('permission.remove', array('u_event_invite')),
-		);
-	}
-  
-  	public function revert_schema()
-	{
-		return array(
+			array('permission.remove', array('u_event_invite_self')),
 		);
 	}
 }
