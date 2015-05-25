@@ -543,7 +543,7 @@ class main
 			
 				break;
 			case 'edit':
-				$event = $this->events->get_events(false, false, $id);
+				$event = $this->events->get_events(false, false, $id, true);
 				
 				$perm = false;
 				if($this->auth->acl_get('m_calendar')) {
@@ -606,7 +606,7 @@ class main
 					
 					meta_refresh(3, $this->helper->route('main'));
 					
-					$message =  $this->user->lang['EVENT_SUCCESSFUL_EDIT'] . '<br /><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a>';
+					$message =  $this->user->lang['EVENT_SUCCESSFUL_EDIT'] . '<br /><br /><a href="' . $this->helper->route('event', array('id' =>  $event['id'])) . '">'. $this->user->lang['RETURN_EVENT'] . '</a><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a>';
 					trigger_error($message);
 				}
 				// if not submitted

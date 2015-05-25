@@ -44,14 +44,21 @@ class events
 	* @param \phpbb\db\driver_interface		$db	phpBB database driver
 	* @param \phpbb\user				$user	phpBB user object
 	*/
-	public function __construct($auth, $config, $db, $user, $events_table)
+	public function __construct($auth, $config, $db, $user, $events_table, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->db = $db;
 		$this->user = $user;
+		$this->root_path = $root_path;
+		$this->php_ext = $php_ext;
 		
 		define('CALENDAR_EVENTS_TABLE', $events_table);
+		
+		if (!function_exists('generate_text_for_storage'))
+		{
+		   include $this->root_path . 'includes/functions_content.' . $this->php_ext; 
+		}
 	}
 
 	/**
@@ -61,7 +68,7 @@ class events
 	* @param int $day Day to get
 	* @param int $year Year to get
 	*/
-	public function get_events($limit = false, $descending = false, $id = 0)
+	public function get_events($limit = false, $descending = false, $id = 0, $edit = false)
 	{
 		$events = array();
 		
@@ -119,6 +126,13 @@ class events
 			
 			$event = $this->db->sql_fetchrow($result);
 			
+			if($edit == true) {
+				decode_message($event['description'], $event['bbcode_uid']);
+			}
+			else {
+				$event['description'] = generate_text_for_display($event['description'], $event['bbcode_uid'], $event['bbcode_bitfield'], $event['bbcode_options']);
+			}
+			
 			return $event;
 		}
 	}
@@ -166,17 +180,25 @@ class events
 	*/
 	public function add_event($user_id, $timestamp, $month, $day, $year, $start, $end, $title, $description)
 	{
+		$description = utf8_normalize_nfc($description);
+		$uid = $bitfield = $options = '';
+		$allow_bbcode = $allow_urls = $allow_smilies = true;
+		generate_text_for_storage($description, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
+		
 		$sql_array = array(
-			'user_id'		=> $user_id,
-			'post_time'		=> $timestamp,
-			'month'			=> $month,
-			'day'			=> $day,
-			'year'			=> $year,
-			'start'			=> $start,
-			'end'			=> $end,
-			'title'			=> $title,
-			'description'	=> $description,
-			'event_status'	=> 0,
+			'user_id'			=> $user_id,
+			'post_time'			=> $timestamp,
+			'month'				=> $month,
+			'day'				=> $day,
+			'year'				=> $year,
+			'start'				=> $start,
+			'end'				=> $end,
+			'title'				=> $title,
+			'description'		=> $description,
+			'bbcode_uid'        => $uid,
+			'bbcode_bitfield'   => $bitfield,
+			'bbcode_options'    => $options,
+			'event_status'		=> 0,
 		);
 		
 		$sql = 'INSERT INTO ' . CALENDAR_EVENTS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_array);
@@ -198,15 +220,23 @@ class events
 	*/
 	public function edit_event($id, $user_id, $month, $day, $year, $start, $end, $title, $description)
 	{
+		$description = utf8_normalize_nfc($description);
+		$uid = $bitfield = $options = '';
+		$allow_bbcode = $allow_urls = $allow_smilies = true;
+		generate_text_for_storage($description, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
+		
 		$sql_array = array(
-			'user_id'		=> $user_id,
-			'month'			=> $month,
-			'day'			=> $day,
-			'year'			=> $year,
-			'start'			=> $start,
-			'end'			=> $end,
-			'title'			=> $title,
-			'description'	=> $description,
+			'user_id'			=> $user_id,
+			'month'				=> $month,
+			'day'				=> $day,
+			'year'				=> $year,
+			'start'				=> $start,
+			'end'				=> $end,
+			'title'				=> $title,
+			'description'		=> $description,
+			'bbcode_uid'        => $uid,
+			'bbcode_bitfield'   => $bitfield,
+			'bbcode_options'    => $options,
 		);
 		
 		$sql = 'UPDATE ' . CALENDAR_EVENTS_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_array) . ' WHERE `id` = ' . $id;

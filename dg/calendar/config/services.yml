@@ -26,6 +26,8 @@ services:
             - @dbal.conn
             - @user
             - %dg.calendar.events.table%
+            - %core.root_path%
+            - %core.php_ext%
             
     dg.calendar.listener:
         class: dg\calendar\event\main_listener

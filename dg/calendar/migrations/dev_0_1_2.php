@@ -27,6 +27,19 @@ class dev_0_1_2 extends \phpbb\db\migration\migration
 		);
 	}
 	
+	public function update_schema()
+	{
+		return array(
+			'add_columns'	=> array(
+				$this->table_prefix . 'calendar_events' => array(
+					'bbcode_uid' => array('VCHAR:255', NULL),
+					'bbcode_bitfield' => array('VCHAR:8', NULL),
+					'bbcode_options' => array('INT:4', 0),
+				),
+			),
+		);
+	}
+	
   	public function revert_data()
 	{
 		return array(
