@@ -7,6 +7,10 @@ h2.calendar-title {
 	font-size: 3.5em;
 }
 
+.icon-calendar {
+	background-image: url('.././images/calendar_icon.gif');
+}
+
 div.calendar-nav-links {
 	clear: both;
 	font-size: 1.3em;
