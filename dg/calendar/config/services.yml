@@ -1,6 +1,7 @@
 parameters:
     dg.calendar.config.table: %core.table_prefix%calendar_config
     dg.calendar.events.table: %core.table_prefix%calendar_events
+    dg.calendar.comments.table: %core.table_prefix%calendar_comments
 
 services:
     dg.calendar.controller.main:
@@ -26,6 +27,7 @@ services:
             - @dbal.conn
             - @user
             - %dg.calendar.events.table%
+            - %dg.calendar.comments.table%
             - %core.root_path%
             - %core.php_ext%
             

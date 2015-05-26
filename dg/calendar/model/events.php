@@ -44,7 +44,7 @@ class events
 	* @param \phpbb\db\driver_interface		$db	phpBB database driver
 	* @param \phpbb\user				$user	phpBB user object
 	*/
-	public function __construct($auth, $config, $db, $user, $events_table, $root_path, $php_ext)
+	public function __construct($auth, $config, $db, $user, $events_table, $comments_table, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -54,6 +54,7 @@ class events
 		$this->php_ext = $php_ext;
 		
 		define('CALENDAR_EVENTS_TABLE', $events_table);
+		define('CALENDAR_COMMENTS_TABLE', $comments_table);
 		
 		if (!function_exists('generate_text_for_storage'))
 		{
@@ -262,6 +263,42 @@ class events
 	public function change_event_status($id, $status)
 	{
 		$sql = 'UPDATE ' . CALENDAR_EVENTS_TABLE . ' SET `event_status` = ' . $status . ' WHERE `id` = ' . $id;
+		$this->db->sql_query($sql);
+	}
+	
+	/**
+	* New comment
+	*
+	* @param int $event_id ID of the event
+	* @param int $user_id User ID of poster
+	* @param int $timestamp Posting timestamp
+	* @param int $month Month of event
+	* @param int $day Day of event
+	* @param int $year Year of event
+	* @param string $start Start time
+	* @param string $end End time
+	* @param string $title Title of event
+	* @param string $description Event description
+	*/
+	public function add_comment($event_id, $user_id, $timestamp, $subject, $text)
+	{
+		$text = utf8_normalize_nfc($text);
+		$uid = $bitfield = $options = '';
+		$allow_bbcode = $allow_urls = $allow_smilies = true;
+		generate_text_for_storage($description, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
+		
+		$sql_array = array(
+			'user_id'			=> $user_id,
+			'post_time'			=> $timestamp,
+			'subject'			=> $subject,
+			'text'				=> $text,
+			'bbcode_uid'        => $uid,
+			'bbcode_bitfield'   => $bitfield,
+			'bbcode_options'    => $options,
+			'event_status'		=> 0,
+		);
+		
+		$sql = 'INSERT INTO ' . CALENDAR_COMMENTS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_array);
 		$this->db->sql_query($sql);
 	}
 }

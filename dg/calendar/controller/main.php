@@ -333,24 +333,10 @@ class main
 	public function event($id)
 	{
 		$event = $this->events->get_events(false, false, $id);
-		$navlinks_array = array(
-			array(
-				'FORUM_NAME'			=> $this->user->lang('CALENDAR_PAGE'),
-				'U_VIEW_FORUM'		=> $this->helper->route('main'),
-			),
-			array(
-				'FORUM_NAME'			=> $this->user->lang('VIEW_EVENT'),
-				'U_VIEW_FORUM'		=> $this->helper->route('event', array('id' => $id)),
-			),
-		);
-		
-		foreach($navlinks_array as $name)
-		{
-			$this->template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'			=> $name['FORUM_NAME'],
-				'U_VIEW_FORUM'		=> $name['U_VIEW_FORUM'],
-			));
-		}
+		$this->template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'			=> $this->user->lang('CALENDAR_PAGE'),
+			'U_VIEW_FORUM'		=> $this->helper->route('main'),
+		));
 		
 		// build content
 		$content = "";
@@ -362,6 +348,13 @@ class main
 		}
 		if($event['description'] != NULL) {
 			$content .= '<br/><b>' . $this->user->lang('DESCRIPTION') . ':</b> ' . $event['description'];
+		}
+		
+		// comment link
+		if($this->auth->acl_get('u_event_comment')) {
+			$this->template->assign_vars(array(
+				'U_COMMENT_LINK'		=> $this->helper->route('posting', array('mode' => 'post', 'id' => $id)),
+			));
 		}
 		
 		// moderator stuff
@@ -804,6 +797,72 @@ class main
 	*/
 	public function posting($mode, $id, $post)
 	{	
+		switch($mode) {
+			case 'post':
+				if($this->auth->acl_get('u_event_comment')) {
+				}
+				else {
+					trigger_error('NOT_AUTHORISED');
+				}
+			
+				$event = $this->events->get_events(false, false, $id);
+				$this->template->assign_vars(array(
+					'EVENT_TITLE'			=> $event['title'],
+					'RE_VALUE'				=> $this->user->lang('RE') . ' ' . $event['title'],
+					
+					'U_EVENT_SELF'			=> $this->helper->route('event', array('id' => $id)),
+				));
+				
+				$navlinks_array = array(
+					array(
+						'FORUM_NAME'			=> $this->user->lang('CALENDAR_PAGE'),
+						'U_VIEW_FORUM'			=> $this->helper->route('main'),
+					),
+					array(
+						'FORUM_NAME'			=> $event['title'],
+						'U_VIEW_FORUM'			=> $this->helper->route('event', array('id' => $id)),
+					),
+				);
+				
+				foreach($navlinks_array as $name)
+				{
+					$this->template->assign_block_vars('navlinks', array(
+						'FORUM_NAME'			=> $name['FORUM_NAME'],
+						'U_VIEW_FORUM'		=> $name['U_VIEW_FORUM'],
+					));
+				}
+				
+				// build error array
+				$errors = array();
+				if($submit) {
+				}
+				
+				// if no error
+				if($submit && empty($errors)) {
+					// $this->events->add_event($user_id, time(), $month, $day, $year, $start_time, $end_time, $title, $description);
+					
+					// meta_refresh(3, $this->helper->route('main'));
+					
+					// $message =  $this->user->lang['EVENT_SUCCESSFUL'] . '<br /><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a>';
+					// trigger_error($message);
+				}
+				// if not submitted
+				else {
+					$c_action = $this->helper->route('posting', array('mode' => 'post', 'id' => $id));
+					
+					$this->template->assign_vars(array(
+						'S_CREATE_ACTION'			=> $c_action,
+						'S_HAS_ERRORS'				=> !empty($errors),
+					
+						'U_CALENDAR_PAGE'			=> $this->helper->route('main'),
+						
+						'ERRORS'					=> implode($errors, '<br />'),
+					));
+				}
+				
+				return $this->helper->render('event_posting_post.html', $this->user->lang('COMMENT'));
+				break;
+		}
 	}
 	
 	// private methods

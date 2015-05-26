@@ -70,9 +70,11 @@ $lang = array_merge($lang, array(
 	'OCTOBER'					=> 'October',
 	
 	'PM'							=> 'PM',
+	'POST_COMMENT'				=> 'Post Comment',
 	
 	'QUICKMOD_TOOLS'			=> 'Quick-mod tools',
 	
+	'RE'							=> 'Re:',
 	'REPORT'						=> 'Report',
 	'RETURN_CALENDAR'			=> 'Return to calendar',
 	'RETURN_EVENT'				=> 'Return to event',
@@ -96,6 +98,7 @@ $lang = array_merge($lang, array(
 	'YEAR'						=> 'Year',
 	
 	// permissions
+	'ACL_U_EVENT_COMMENT'		=> 'Can comment on events',
 	'ACL_U_EVENT_INVITE'		=> 'Can invite users to any event',
 	'ACL_U_EVENT_INVITE_SELF'	=> 'Can invite users to own event',
 	'ACL_U_EVENT_REPORT'		=> 'Can report events',

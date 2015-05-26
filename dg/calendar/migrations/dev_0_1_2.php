@@ -37,6 +37,21 @@ class dev_0_1_2 extends \phpbb\db\migration\migration
 					'bbcode_options' => array('INT:4', 0),
 				),
 			),
+			
+			'add_tables' => array(
+				$this->table_prefix . 'calendar_comments' => array(
+			  		'COLUMNS' => array(
+					'id' => array('INT:11', NULL, 'auto_increment'),
+					'event_id' => array('INT:11', 0),
+					'user_id' => array('INT:11', 0),
+					'post_time' => array('INT:11', 0),
+					'subject' => array('VCHAR:255', NULL),
+					'text' => array('TEXT', NULL),
+			  	),
+			  
+				'PRIMARY_KEY' => 'id',
+				),
+			),
 		);
 	}
 	
@@ -46,6 +61,7 @@ class dev_0_1_2 extends \phpbb\db\migration\migration
 			array('permission.remove', array('u_self_lock')),
 			array('permission.remove', array('u_event_invite')),
 			array('permission.remove', array('u_event_invite_self')),
+			array('permission.remove', array('u_event_comment')),
 		);
 	}
 }

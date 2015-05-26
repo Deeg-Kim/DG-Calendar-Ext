@@ -1,0 +1,32 @@
+<!-- INCLUDE overall_header.html -->
+
+<h2 class="posting-title"><a href="{U_EVENT_SELF}">{EVENT_TITLE}</a></h2>
+
+<form id="postform" method="post" action="{S_EDIT_ACTION}" enctype="multipart/form-data">
+	<div class="panel" id="postingbox">
+		<div class="inner">
+			<h3>{L_POST_COMMENT}</h3>
+            <!-- IF S_HAS_ERRORS -->
+                <p class="error">
+                {ERRORS}
+                </p>
+            <!-- ENDIF -->
+			<fieldset class="fields1">
+            	<dl style="clear: left;">
+                    <dt><label for="subject">{L_SUBJECT}:</label></dt>
+                    <dd><input type="text" name="subject" id="subject" size="45" maxlength="124" tabindex="2" value="{RE_VALUE}" class="inputbox autowidth" /></dd>
+				</dl>
+				<textarea name="text" id="description" rows="10" cols="50" tabindex="11" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" class="inputbox"></textarea>
+			</fieldset>
+		</div>
+	</div>
+    <div class="panel bg2">
+        <div class="inner">
+            <fieldset class="submit-buttons">		
+                <input type="submit" accesskey="s" tabindex="12" name="post" value="{L_SUBMIT}" class="button1 default-submit-action" />&nbsp;
+            </fieldset>
+        </div>
+    </div>
+</form>
+
+<!-- INCLUDE overall_footer.html -->

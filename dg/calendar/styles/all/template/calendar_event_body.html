@@ -4,7 +4,9 @@
 
 <div class="action-bar top">
 	<div class="buttons">
-		<a href="" class="button icon-button reply-icon" title="{L_COMMENT">{L_COMMENT}</a>
+		<!-- IF U_COMMENT_LINK -->
+        	<a href="{U_COMMENT_LINK}" class="button icon-button reply-icon" title="{L_COMMENT}">{L_COMMENT}</a>
+    	<!-- ENDIF -->
 	</div>
 	
 	<div class="pagination">
@@ -31,7 +33,7 @@
                 <!-- ENDIF -->
                 <!-- IF U_REPORT_LINK -->
 				<li>
-					<a href={U_REPORT_LINK}"" title="{L_REPORT}" class="button icon-button report-icon"><span>{L_REPORT}</span></a>
+					<a href="{U_REPORT_LINK}" title="{L_REPORT}" class="button icon-button report-icon"><span>{L_REPORT}</span></a>
 				</li>
                 <!-- ENDIF -->
 			</ul>
@@ -45,7 +47,9 @@
 
 <div class="action-bar bottom">
     <div class="buttons">
-		<a href="{U_COMMENT}" class="button icon-button reply-icon" title="{L_COMMENT}">{L_COMMENT}</a>
+		<!-- IF U_COMMENT_LINK -->
+        	<a href="{U_COMMENT_LINK}" class="button icon-button reply-icon" title="{L_COMMENT}">{L_COMMENT}</a>
+    	<!-- ENDIF -->
 	</div>
     <!-- IF S_MODERATOR -->
 	<div class="dropdown-container dropdown-container-left dropdown-up dropdown-right dropdown-button-control" id="quickmod">
