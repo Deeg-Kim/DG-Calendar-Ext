@@ -238,11 +238,11 @@ class main
 		
 		// if no error
 		if($submit && empty($errors)) {
-			$this->events->add_event($user_id, time(), $month, $day, $year, $start_time, $end_time, $title, $description);
+			$new_id = $this->events->add_event($user_id, time(), $month, $day, $year, $start_time, $end_time, $title, $description);
 			
 			meta_refresh(3, $this->helper->route('main'));
 			
-			$message =  $this->user->lang['EVENT_SUCCESSFUL'] . '<br /><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a>';
+			$message =  $this->user->lang['EVENT_SUCCESSFUL'] . '<br /><br /><a href="' . $this->helper->route('event', array('id' => $new_id)) . '">'. $this->user->lang['VIEW_EVENT'] . '</a><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a>';
 			trigger_error($message);
 		}
 		// if not submitted
@@ -404,6 +404,7 @@ class main
 			$this->template->assign_block_vars('commentrow', array(
 				'BG'				=> 'bg' . $num,
 				'POST_ID' 		=> $comments[$i]['id'],
+				'POST_TIME'		=> date($member['user_dateformat'], $comments[$i]['post_time']),
 				'POSTER'			=> get_username_string("full", $member['user_id'], $member['username'], $member['user_colour']),
 				'SUBJECT'		=> $comments[$i]['subject'],
 				'TEXT'			=> $comments[$i]['text'],

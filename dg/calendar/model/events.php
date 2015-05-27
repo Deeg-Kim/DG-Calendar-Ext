@@ -204,6 +204,8 @@ class events
 		
 		$sql = 'INSERT INTO ' . CALENDAR_EVENTS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_array);
 		$this->db->sql_query($sql);
+		
+		return $this->db->sql_nextid();
 	}
 	
 	/**

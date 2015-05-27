@@ -22,6 +22,8 @@ $lang = array_merge($lang, array(
 	'APRIL'						=> 'April',
 	'AUGUST'						=> 'August',
 	
+	'BY'							=> 'by',
+	
 	'CALENDAR'					=> 'Calendar',
 	'CALENDAR_PAGE'				=> 'Calendar',
 	'COMMENT'					=> 'Comment',

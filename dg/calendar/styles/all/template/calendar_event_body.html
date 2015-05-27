@@ -52,12 +52,12 @@
         	<div class="postbody">
             	<div id="post_content{commentrow.POST_ID}">
                 	<h3><a href="#p{commentrow.POST_ID}">{commentrow.SUBJECT}</a></h3>
-                    <p class="author">{commentrow.POSTER}</p>
+                    <p class="author"><a href=""><span class="imageset icon_post_target" title="{L_POST}">{L_POST}</span></a> {L_BY} {commentrow.POSTER} &raquo; {commentrow.POST_TIME}</p>
                     <div class="content">{commentrow.TEXT}</div>
                 </div>
             </div>
             <div class="back2top">
-            	<a href="#top" class="top" title="Top">Top</a>
+            	<a href="#top" class="top" title="Top">{L_TOP}</a>
             </div>
         </div>
     </div>
