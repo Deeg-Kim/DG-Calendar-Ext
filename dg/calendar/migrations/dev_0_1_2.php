@@ -64,4 +64,13 @@ class dev_0_1_2 extends \phpbb\db\migration\migration
 			array('permission.remove', array('u_event_comment')),
 		);
 	}
+  
+  	public function revert_schema()
+	{
+		return array(
+			'drop_tables'	=> array(
+				$this->table_prefix . 'calendar_comments'
+			),
+		);
+	}
 }
