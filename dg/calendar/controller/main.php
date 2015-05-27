@@ -390,6 +390,25 @@ class main
 		}
 		
 		// build comments
+		$comments = $this->events->get_comments($id);
+		
+		for ($i = 0; $i < count($comments); $i++)
+		{
+			$sql = 'SELECT *
+					 FROM ' . USERS_TABLE . '
+					 WHERE user_id = ' . $event['user_id'];
+			$result = $this->db->sql_query($sql);
+			$member = $this->db->sql_fetchrow($result);
+			
+			$num = $i % 2 + 1;
+			$this->template->assign_block_vars('commentrow', array(
+				'BG'				=> 'bg' . $num,
+				'POST_ID' 		=> $comments[$i]['id'],
+				'POSTER'			=> get_username_string("full", $member['user_id'], $member['username'], $member['user_colour']),
+				'SUBJECT'		=> $comments[$i]['subject'],
+				'TEXT'			=> $comments[$i]['text'],
+			));
+		}
 		
 		// build user
 		$sql = 'SELECT *
@@ -804,6 +823,8 @@ class main
 				else {
 					trigger_error('NOT_AUTHORISED');
 				}
+				
+				$submit = (isset($_POST['post'])) ? true : false;
 			
 				$event = $this->events->get_events(false, false, $id);
 				$this->template->assign_vars(array(
@@ -832,19 +853,33 @@ class main
 					));
 				}
 				
+				// get vars
+				$user_id = $this->user->data['user_id'];
+				$subject = request_var('subject', '');
+				if($subject == '') {
+					$subject = NULL;
+				}
+				$text = request_var('text', '');
+				if($text == '') {
+					$text = NULL;
+				}
+				
 				// build error array
 				$errors = array();
 				if($submit) {
+					if (strlen($text) == 0) {
+						$errors[] = $this->user->lang('FIELD_NO_EMPTY', $this->user->lang('MESSAGE'));
+					}
 				}
 				
 				// if no error
 				if($submit && empty($errors)) {
-					// $this->events->add_event($user_id, time(), $month, $day, $year, $start_time, $end_time, $title, $description);
+					$this->events->add_comment($id, $user_id, time(), $subject, $text);
 					
-					// meta_refresh(3, $this->helper->route('main'));
+					meta_refresh(3, $this->helper->route('main'));
 					
-					// $message =  $this->user->lang['EVENT_SUCCESSFUL'] . '<br /><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a>';
-					// trigger_error($message);
+					$message =  $this->user->lang['COMMENT_SUCCESSFUL'] . '<br /><br /><a href="' . $this->helper->route('event', array('id' =>  $event['id'])) . '">'. $this->user->lang['RETURN_EVENT'] . '</a><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a>';
+					trigger_error($message);
 				}
 				// if not submitted
 				else {

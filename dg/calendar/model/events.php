@@ -285,9 +285,10 @@ class events
 		$text = utf8_normalize_nfc($text);
 		$uid = $bitfield = $options = '';
 		$allow_bbcode = $allow_urls = $allow_smilies = true;
-		generate_text_for_storage($description, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
+		generate_text_for_storage($text, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
 		
 		$sql_array = array(
+			'event_id'			=> $event_id,
 			'user_id'			=> $user_id,
 			'post_time'			=> $timestamp,
 			'subject'			=> $subject,
@@ -295,10 +296,38 @@ class events
 			'bbcode_uid'        => $uid,
 			'bbcode_bitfield'   => $bitfield,
 			'bbcode_options'    => $options,
-			'event_status'		=> 0,
 		);
 		
 		$sql = 'INSERT INTO ' . CALENDAR_COMMENTS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_array);
 		$this->db->sql_query($sql);
+	}
+	
+	/**
+	* New comment
+	*
+	* @param int $id ID of the event
+	*/
+	public function get_comments($id)
+	{
+		$sql_array = array(
+			'SELECT'		=> '*',
+			'FROM'		=> array(CALENDAR_COMMENTS_TABLE => 'c'),
+			'ORDER_BY'	=> 'post_time ASC',
+			'WHERE'		=> 'c.event_id = ' . $id,
+		);
+		
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $this->db->sql_query($sql);
+		
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$comments[] = $row;
+		}
+		
+		for($i = 0; $i < count($comments); $i++) {
+			$comments[$i]['text'] = generate_text_for_display($comments[$i]['text'], $comments[$i]['bbcode_uid'], $comments[$i]['bbcode_bitfield'], $comments[$i]['bbcode_options']);
+		}
+		
+		return $comments;
 	}
 }

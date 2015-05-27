@@ -25,6 +25,7 @@ $lang = array_merge($lang, array(
 	'CALENDAR'					=> 'Calendar',
 	'CALENDAR_PAGE'				=> 'Calendar',
 	'COMMENT'					=> 'Comment',
+	'COMMENT_SUCCESSFUL'		=> 'Comment posted successfully!',
 	'CREATE_EVENT'				=> 'Create Event',
 	
 	'DATE'						=> 'Date',
@@ -46,6 +47,7 @@ $lang = array_merge($lang, array(
 	
 	'FEBRUARY'					=> 'February',
 	'FIELD_OPTIONAL'			=> 'This field optional',
+	'FIELD_NO_EMPTY'			=> 'The %s field cannot be empty.',
 	'FIELD_REQUIRED'			=> 'The %s field is required.',
 	'FRIDAY'						=> 'Friday',
 	'FRONT_PAGE'					=> 'Front page',
@@ -59,6 +61,7 @@ $lang = array_merge($lang, array(
 	'MARCH'						=> 'March',
 	'MAY'						=> 'May',
 	'MCP_CALENDAR'				=> 'Calendar MCP',
+	'MESSAGE'					=> 'Message',
 	'MODERATE_CALENDAR'			=> 'Calendar Moderator Control Panel',
 	'MONDAY'						=> 'Monday',
 	'MONTH'						=> 'Month',

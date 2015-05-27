@@ -15,11 +15,11 @@
 	
 </div>
 
-<div id="p1" class="post bg2">
+<div id="event" class="post bg2">
 	<div class="inner">
 		<div class="postbody" style="width: 100%;">
         <h3 class="first">
-        	<a href="#p1">{EVENT_TITLE}</a></h3>     
+        	<a href="#event">{EVENT_TITLE}</a></h3>     
 			<ul class="post-buttons">
             	<!-- IF U_EDIT_LINK -->
 				<li>
@@ -44,6 +44,24 @@
 		</div>
 	</div>
 </div>
+
+<!-- BEGIN commentrow -->
+	<hr class="divider">
+    <div id="p{commentrow.POST_ID}" class="post {commentrow.BG}">
+    	<div class="inner">
+        	<div class="postbody">
+            	<div id="post_content{commentrow.POST_ID}">
+                	<h3><a href="#p{commentrow.POST_ID}">{commentrow.SUBJECT}</a></h3>
+                    <p class="author">{commentrow.POSTER}</p>
+                    <div class="content">{commentrow.TEXT}</div>
+                </div>
+            </div>
+            <div class="back2top">
+            	<a href="#top" class="top" title="Top">Top</a>
+            </div>
+        </div>
+    </div>
+<!-- END commentrow -->
 
 <div class="action-bar bottom">
     <div class="buttons">
