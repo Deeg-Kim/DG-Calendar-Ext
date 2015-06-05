@@ -553,7 +553,23 @@ class main
 				
 				break;
 			case 'lock':
+				$perm = false;
+				$event = $this->events->get_events(false, false, $id);
 			
+				if($this->auth->acl_get('m_calendar')) {
+					$perm = true;
+				}
+				if($this->user->data['user_id'] == $event['user_id'] && $this->auth->acl_get('u_self_lock')) {
+					$perm = true;
+				}
+				
+				if($perm) {
+					$this->events->change_event_status($id, 1);
+				}
+				else {
+					trigger_error('NOT_AUTHORISED');
+				}
+				
 				break;
 			case 'edit':
 				$event = $this->events->get_events(false, false, $id, true);
