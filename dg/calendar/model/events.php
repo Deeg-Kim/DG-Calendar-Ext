@@ -247,6 +247,31 @@ class events
 	}
 	
 	/**
+	* Check if an event id exists
+	* Returns false if no event exists
+	*
+	* @param int $id ID of the event
+	*/
+	public function check_event($id)
+	{
+		$sql_array = array(
+			'SELECT'		=> '*',
+			'FROM'		=> array(CALENDAR_EVENTS_TABLE => 'c'),
+			'WHERE'		=> 'c.id = ' . $id,
+		);
+		
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $this->db->sql_query($sql);
+		
+		if($result->num_rows == 0) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
+	/**
 	* Delete event
 	*
 	* @param int $id The id of the event

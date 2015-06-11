@@ -72,8 +72,10 @@ class main_listener implements EventSubscriberInterface
 
 	public function add_page_header_link($event)
 	{
-		$this->template->assign_vars(array(
-			'U_CALENDAR_PAGE'	=> generate_board_url() . "/app.php/calendar",
-		));
+		if($this->auth->acl_get('u_calendar')) {
+			$this->template->assign_vars(array(
+				'U_CALENDAR_PAGE'	=> generate_board_url() . "/app.php/calendar",
+			));
+		}
 	}
 }

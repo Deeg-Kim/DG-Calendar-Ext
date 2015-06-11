@@ -19,7 +19,19 @@ class dev_0_1_3 extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
+			array('permission.add', array('u_event_comment')),
+			array('permission.add', array('u_calendar')),
+			
 			array('config.update', array('calendar_dg_version', '0.1.3')),
+		);
+	}
+	
+	public function revert_schema()
+	{
+		return array(
+			'drop_tables'	=> array(
+				$this->table_prefix . 'calendar_config'
+			),
 		);
 	}
 }

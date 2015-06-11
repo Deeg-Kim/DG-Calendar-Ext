@@ -82,6 +82,10 @@ class main
 		{
 		   include $this->root_path . 'includes/functions_display.' . $this->php_ext; 
 		}
+		
+		if(!$this->auth->acl_get('u_calendar')) {
+			trigger_error('NOT_AUTHORISED');
+		}
 	}
 
 	/**
@@ -332,6 +336,10 @@ class main
 	*/
 	public function event($id)
 	{
+		if($this->events->check_event($id) == false) {
+			trigger_error('EVENT_NOT_EXIST');
+		}
+		
 		$event = $this->events->get_events(false, false, $id);
 		$this->template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'			=> $this->user->lang('CALENDAR_PAGE'),
@@ -368,7 +376,7 @@ class main
 			));
 		}
 		
-		// delete/edit/report links
+		// delete/edit/report/invite links
 		if($this->user->data['user_id'] == $event['user_id']) {
 			if($this->auth->acl_get('u_self_delete')) {
 				$this->template->assign_vars(array(
@@ -387,6 +395,18 @@ class main
 					'U_REPORT_LINK'		=> $this->helper->route('manage', array('mode' => 'report', 'id' => $id)),
 				));
 			}
+			if($this->auth->acl_get('u_event_invite_self')) {
+				$this->template->assign_vars(array(
+					'U_INVITE_LINK'		=> 'asdf',
+				));
+			}
+		}
+		
+		// invite links (but not self)
+		if($this->auth->acl_get('u_event_invite')) {
+			$this->template->assign_vars(array(
+				'U_INVITE_LINK'		=> 'asdf',
+			));
 		}
 		
 		// build comments

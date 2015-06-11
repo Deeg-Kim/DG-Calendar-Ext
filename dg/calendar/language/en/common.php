@@ -42,8 +42,11 @@ $lang = array_merge($lang, array(
 	'EVENT_DELETE'				=> 'Delete event',
 	'EVENT_DELETE_CONFIRM'		=> 'Are you sure you want to delete this event?',
 	'EVENT_DELETE_SUCCESSFUL'	=> 'Event deleted successfully!',
+	'EVENT_INVITE_TYPE_OPTION'	=> 'Someone has invited you to an event.',
+	'EVENT_INVITED'				=> 'New event invitation from %s',
 	'EVENT_LOCK'					=> 'Lock event',
 	'EVENT_NOT_DELETED'			=> 'Event not deleted.',
+	'EVENT_NOT_EXIST'			=> 'This event does not exist.',
 	'EVENT_SUCCESSFUL'			=> 'Event created successfully!',
 	'EVENT_SUCCESSFUL_EDIT'		=> 'Event edited successfully!',
 	
@@ -53,6 +56,8 @@ $lang = array_merge($lang, array(
 	'FIELD_REQUIRED'			=> 'The %s field is required.',
 	'FRIDAY'						=> 'Friday',
 	'FRONT_PAGE'					=> 'Front page',
+	
+	'INVITE'						=> 'Invite',
 	
 	'JANUARY'					=> 'January',
 	'JULY'						=> 'July',
@@ -103,6 +108,7 @@ $lang = array_merge($lang, array(
 	'YEAR'						=> 'Year',
 	
 	// permissions
+	'ACL_U_CALENDAR'			=> 'Can see calendar',
 	'ACL_U_EVENT_COMMENT'		=> 'Can comment on events',
 	'ACL_U_EVENT_INVITE'		=> 'Can invite users to any event',
 	'ACL_U_EVENT_INVITE_SELF'	=> 'Can invite users to own event',
