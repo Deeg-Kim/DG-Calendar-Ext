@@ -254,6 +254,11 @@ class events
 	*/
 	public function check_event($id)
 	{
+		$id = (int) $id;
+		if(!is_int($id)) {
+			return false;
+		}
+		
 		$sql_array = array(
 			'SELECT'		=> '*',
 			'FROM'		=> array(CALENDAR_EVENTS_TABLE => 'c'),

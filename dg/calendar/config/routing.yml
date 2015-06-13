@@ -30,3 +30,8 @@ manage:
 posting:
     path: /calendar/posting/{mode}/{id}/{post}
     defaults: { _controller: dg.calendar.controller.main:posting, post: NULL }
+    
+# invite to events
+invite:
+    path: /calendar/invite/{id}
+    defaults: { _controller: dg.calendar.controller.main:invite }

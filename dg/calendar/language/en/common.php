@@ -45,10 +45,17 @@ $lang = array_merge($lang, array(
 	'EVENT_INVITE_TYPE_OPTION'	=> 'Someone has invited you to an event.',
 	'EVENT_INVITED'				=> 'New event invitation from %s',
 	'EVENT_LOCK'					=> 'Lock event',
+	'EVENT_LOCK_CONFIRM'		=> 'Are you sure you want to lock this event?',
+	'EVENT_LOCK_SUCCESSFUL'		=> 'Event locked successfully!',
+	'EVENT_NO_REPLY'			=> 'This event is locked, you cannot edit posts or make further replies.',
 	'EVENT_NOT_DELETED'			=> 'Event not deleted.',
+	'EVENT_NOT_LOCKED'			=> 'Event not locked.',
 	'EVENT_NOT_EXIST'			=> 'This event does not exist.',
 	'EVENT_SUCCESSFUL'			=> 'Event created successfully!',
 	'EVENT_SUCCESSFUL_EDIT'		=> 'Event edited successfully!',
+	'EVENT_UNLOCK'				=> 'Unlock event',
+	'EVENT_UNLOCK_CONFIRM'		=> 'Are you sure you want to unlock this event?',
+	'EVENT_UNLOCK_SUCCESSFUL'	=> 'Event unlocked successfully!',
 	
 	'FEBRUARY'					=> 'February',
 	'FIELD_OPTIONAL'			=> 'This field optional',
@@ -58,12 +65,14 @@ $lang = array_merge($lang, array(
 	'FRONT_PAGE'					=> 'Front page',
 	
 	'INVITE'						=> 'Invite',
+	'INVITE_USERS'				=> 'Invite Users',
 	
 	'JANUARY'					=> 'January',
 	'JULY'						=> 'July',
 	'JUNE'						=> 'June',
 	
 	'LAST_5_EVENTS'				=> 'Last 5 Events Posted',
+	'LOCKED'						=> 'Locked',
 	
 	'MARCH'						=> 'March',
 	'MAY'						=> 'May',

@@ -26,6 +26,25 @@ class dev_0_1_3 extends \phpbb\db\migration\migration
 		);
 	}
 	
+	public function update_schema()
+	{
+		return array(
+			'add_tables' => array(
+				$this->table_prefix . 'event_invites' => array(
+			  		'COLUMNS' => array(
+					'id' => array('INT:11', NULL, 'auto_increment'),
+					'timestamp' => array('INT:11', 0),
+					'event_id' => array('INT:11', 0),
+					'invite_id' => array('INT:11', 0),
+					'invite_receive_id' => array('INT:11', 0),
+			  	),
+			  
+				'PRIMARY_KEY' => 'id',
+				),
+			),
+		);
+	}
+	
 	public function revert_schema()
 	{
 		return array(

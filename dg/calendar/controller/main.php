@@ -358,6 +358,11 @@ class main
 			$content .= '<br/><b>' . $this->user->lang('DESCRIPTION') . ':</b> ' . $event['description'];
 		}
 		
+		// check event status
+		$this->template->assign_vars(array(
+			'S_EVENT_STATUS'		=> $event['event_status'],
+		));
+		
 		// comment link
 		if($this->auth->acl_get('u_event_comment')) {
 			$this->template->assign_vars(array(
@@ -372,11 +377,13 @@ class main
 			$this->template->assign_vars(array(
 				'U_DELETE_LINK'		=> $this->helper->route('manage', array('mode' => 'delete', 'id' => $id)),
 				'U_EDIT_LINK'		=> $this->helper->route('manage', array('mode' => 'edit', 'id' => $id)),
+				'U_LOCK_LINK'		=> $this->helper->route('manage', array('mode' => 'lock', 'id' => $id)),
+				'U_UNLOCK_LINK'		=> $this->helper->route('manage', array('mode' => 'unlock', 'id' => $id)),
 				'U_REPORT_LINK'		=> $this->helper->route('manage', array('mode' => 'report', 'id' => $id)),
 			));
 		}
 		
-		// delete/edit/report/invite links
+		// delete/edit/report/lock/invite links
 		if($this->user->data['user_id'] == $event['user_id']) {
 			if($this->auth->acl_get('u_self_delete')) {
 				$this->template->assign_vars(array(
@@ -390,6 +397,13 @@ class main
 				));
 			}
 			
+			if($this->auth->acl_get('u_self_lock')) {
+				$this->template->assign_vars(array(
+					'U_LOCK_LINK'		=> $this->helper->route('manage', array('mode' => 'lock', 'id' => $id)),
+					'U_UNLOCK_LINK'		=> $this->helper->route('manage', array('mode' => 'unlock', 'id' => $id)),
+				));
+			}
+			
 			if($this->auth->acl_get('u_event_report')) {
 				$this->template->assign_vars(array(
 					'U_REPORT_LINK'		=> $this->helper->route('manage', array('mode' => 'report', 'id' => $id)),
@@ -397,7 +411,7 @@ class main
 			}
 			if($this->auth->acl_get('u_event_invite_self')) {
 				$this->template->assign_vars(array(
-					'U_INVITE_LINK'		=> 'asdf',
+					'U_INVITE_LINK'		=> $this->helper->route('invite', array('id' => $id)),
 				));
 			}
 		}
@@ -405,7 +419,7 @@ class main
 		// invite links (but not self)
 		if($this->auth->acl_get('u_event_invite')) {
 			$this->template->assign_vars(array(
-				'U_INVITE_LINK'		=> 'asdf',
+				'U_INVITE_LINK'		=> $this->helper->route('invite', array('id' => $id)),
 			));
 		}
 		
@@ -496,7 +510,7 @@ class main
 				'U_VIEW_FORUM'		=> $this->helper->route('main'),
 			),
 			array(
-				'FORUM_NAME'			=> $this->user->lang['MCP_CALENDAR'],
+				'FORUM_NAME'			=> $this->user->lang('MCP_CALENDAR'),
 				'U_VIEW_FORUM'		=> $this->helper->route('moderate'),
 			),
 		);
@@ -584,7 +598,84 @@ class main
 				}
 				
 				if($perm) {
-					$this->events->change_event_status($id, 1);
+					$submit = request_var('submit', 0);
+					// check mode
+					if (confirm_box(true))
+					{
+						$this->events->change_event_status($id, 1);
+						
+						meta_refresh(3, $this->helper->route('main'));
+							
+						$message =  $this->user->lang['EVENT_LOCK_SUCCESSFUL'] . '<br /><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a><br /><a href="' . $this->helper->route('event', array('id' => $id)) .'">'. $this->user->lang['RETURN_EVENT'] . '</a>';
+						trigger_error($message);
+					}
+					else
+					{
+						if($submit) {
+							meta_refresh(3, $this->helper->route('event', array('id' => $id)));
+							
+							$message =  $this->user->lang['EVENT_NOT_LOCKED'] . '<br /><br /><a href="' . $this->helper->route('event', array('id' => $id)) .'">'. $this->user->lang['RETURN_EVENT'] . '</a>';
+							trigger_error($message);
+						}
+						else {
+							$s_hidden_fields = build_hidden_fields(array(
+								'submit'    => true,
+								'event' 		=> $event,
+								)
+							);
+					
+							//display mode
+							confirm_box(false, 'EVENT_LOCK', $s_hidden_fields);
+						}
+					}
+				}
+				else {
+					trigger_error('NOT_AUTHORISED');
+				}
+				
+				break;
+			case 'unlock':
+				$perm = false;
+				$event = $this->events->get_events(false, false, $id);
+			
+				if($this->auth->acl_get('m_calendar')) {
+					$perm = true;
+				}
+				if($this->user->data['user_id'] == $event['user_id'] && $this->auth->acl_get('u_self_lock')) {
+					$perm = true;
+				}
+				
+				if($perm) {
+					$submit = request_var('submit', 0);
+					// check mode
+					if (confirm_box(true))
+					{
+						$this->events->change_event_status($id, 0);
+						
+						meta_refresh(3, $this->helper->route('main'));
+							
+						$message =  $this->user->lang['EVENT_UNLOCK_SUCCESSFUL'] . '<br /><br /><a href="' . generate_board_url() . '/app.php/calendar">'. $this->user->lang['RETURN_CALENDAR'] . '</a><br /><a href="' . $this->helper->route('event', array('id' => $id)) .'">'. $this->user->lang['RETURN_EVENT'] . '</a>';
+						trigger_error($message);
+					}
+					else
+					{
+						if($submit) {
+							meta_refresh(3, $this->helper->route('event', array('id' => $id)));
+							
+							$message =  $this->user->lang['EVENT_NOT_UNLOCKED'] . '<br /><br /><a href="' . $this->helper->route('event', array('id' => $id)) .'">'. $this->user->lang['RETURN_EVENT'] . '</a>';
+							trigger_error($message);
+						}
+						else {
+							$s_hidden_fields = build_hidden_fields(array(
+								'submit'    => true,
+								'event' 		=> $event,
+								)
+							);
+					
+							//display mode
+							confirm_box(false, 'EVENT_UNLOCK', $s_hidden_fields);
+						}
+					}
 				}
 				else {
 					trigger_error('NOT_AUTHORISED');
@@ -864,6 +955,11 @@ class main
 				$submit = (isset($_POST['post'])) ? true : false;
 			
 				$event = $this->events->get_events(false, false, $id);
+				
+				if($event['event_status'] == 1) {
+					trigger_error('EVENT_NO_REPLY');
+				}
+				
 				$this->template->assign_vars(array(
 					'EVENT_TITLE'			=> $event['title'],
 					'RE_VALUE'				=> $this->user->lang('RE') . ' ' . $event['title'],
@@ -935,6 +1031,40 @@ class main
 				return $this->helper->render('event_posting_post.html', $this->user->lang('COMMENT'));
 				break;
 		}
+	}
+	
+	/**
+	* Controller for route /calendar/invite/{id}
+	*
+	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	*/
+	public function invite($id)
+	{
+		if($this->events->check_event($id) == false) {
+			trigger_error('EVENT_NOT_EXIST');
+		}
+		
+		$event = $this->events->get_events(false, false, $id);
+		$navlinks_array = array(
+			array(
+				'FORUM_NAME'			=> $this->user->lang('CALENDAR_PAGE'),
+				'U_VIEW_FORUM'		=> $this->helper->route('main'),
+			),
+			array(
+				'FORUM_NAME'			=> $event['title'],
+				'U_VIEW_FORUM'		=> $this->helper->route('event', array('id' => $id)),
+			),
+		);
+		
+		foreach($navlinks_array as $name)
+		{
+			$this->template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	 		=> $name['FORUM_NAME'],
+				'U_VIEW_FORUM'		=> $name['U_VIEW_FORUM'],
+			));
+		}
+		
+		return $this->helper->render('calendar_invite_body.html', $this->user->lang('CALENDAR'));
 	}
 	
 	// private methods
