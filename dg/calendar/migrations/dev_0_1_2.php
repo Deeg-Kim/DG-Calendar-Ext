@@ -47,6 +47,9 @@ class dev_0_1_2 extends \phpbb\db\migration\migration
 					'post_time' => array('INT:11', 0),
 					'subject' => array('VCHAR:255', NULL),
 					'text' => array('TEXT', NULL),
+					'bbcode_uid' => array('VCHAR:255', NULL),
+					'bbcode_bitfield' => array('VCHAR:8', NULL),
+					'bbcode_options' => array('INT:4', 0),
 			  	),
 			  
 				'PRIMARY_KEY' => 'id',

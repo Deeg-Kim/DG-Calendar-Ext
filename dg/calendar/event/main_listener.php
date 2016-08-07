@@ -24,6 +24,7 @@ class main_listener implements EventSubscriberInterface
 		return array(
 			'core.user_setup'		=> 'load_language_on_setup',
 			'core.page_header'		=> 'add_page_header_link',
+			'core.permissions'		=> 'add_permissions'
 		);
 	}
 
@@ -78,4 +79,23 @@ class main_listener implements EventSubscriberInterface
 			));
 		}
 	}
+
+    public function add_permissions($event) {
+        $permissions = $event['permissions'];
+        $permissions['u_new_event'] = array('lang' => 'ACL_U_NEW_EVENT', 'cat' => 'misc');
+        $permissions['m_calendar'] = array('lang' => 'ACL_M_CALENDAR', 'cat' => 'misc');
+
+        $permissions['u_self_edit'] = array('lang' => 'ACL_U_SELF_EDIT', 'cat' => 'misc');
+        $permissions['u_self_delete'] = array('lang' => 'ACL_U_SELF_DELETE', 'cat' => 'misc');
+        $permissions['u_event_report'] = array('lang' => 'ACL_U_EVENT_REPORT', 'cat' => 'misc');
+
+        $permissions['u_self_lock'] = array('lang' => 'ACL_U_SELF_LOCK', 'cat' => 'misc');
+        $permissions['u_event_invite'] = array('lang' => 'ACL_U_EVENT_INVITE', 'cat' => 'misc');
+        $permissions['u_event_invite_self'] = array('lang' => 'ACL_U_EVENT_INVITE_SELF', 'cat' => 'misc');
+
+        $permissions['u_event_comment'] = array('lang' => 'ACL_U_EVENT_COMMENT', 'cat' => 'misc');
+        $permissions['u_calendar'] = array('lang' => 'ACL_U_CALENDAR', 'cat' => 'misc');
+
+        $event['permissions'] = $permissions;
+    }
 }
