@@ -82,7 +82,7 @@ class main_listener implements EventSubscriberInterface
 
     public function add_permissions($event) {
         $permissions = $event['permissions'];
-        $permissions['u_calendar_new_event'] = array('lang' => 'ACL_U_NEW_EVENT', 'cat' => 'misc');
+        $permissions['u_new_event'] = array('lang' => 'ACL_U_NEW_EVENT', 'cat' => 'misc');
         $permissions['m_calendar'] = array('lang' => 'ACL_M_CALENDAR', 'cat' => 'misc');
 
         $permissions['u_self_edit'] = array('lang' => 'ACL_U_SELF_EDIT', 'cat' => 'misc');
