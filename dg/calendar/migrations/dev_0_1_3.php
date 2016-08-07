@@ -44,12 +44,20 @@ class dev_0_1_3 extends \phpbb\db\migration\migration
 			),
 		);
 	}
-	
+
+	public function revert_data()
+	{
+		return array(
+			array('permission.remove', array('u_event_comment')),
+			array('permission.remove', array('u_calendar'))
+		);
+	}
+
 	public function revert_schema()
 	{
 		return array(
 			'drop_tables'	=> array(
-				$this->table_prefix . 'calendar_config'
+				$this->table_prefix . 'event_invites'
 			),
 		);
 	}
