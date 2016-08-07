@@ -209,7 +209,7 @@ class main
 		
 		// get data from form
 		$user_id 		= $this->user->data['user_id'];
-		$title 			= request_var('title', '');
+		$title 			= utf8_normalize_nfc(request_var('title', '', true));
 		$month 			= request_var('month', 0);
 		$day			= request_var('day', 0);
 		$year			= request_var('year', 0);
@@ -221,7 +221,7 @@ class main
 			$start_time		= request_var('start_hour', 0) . ':' . str_pad(request_var('start_minute', 0), 2, '0', STR_PAD_LEFT) . ' ' . request_var('start_meridiem', '');
 			$end_time		= request_var('end_hour', 0) . ':' . str_pad(request_var('end_minute', 0), 2, '0', STR_PAD_LEFT) . ' ' . request_var('end_meridiem', '');
 		}
-		$description	= request_var('description', '');
+		$description	= utf8_normalize_nfc(request_var('description', '', true));
 		if($description == '') {
 			$description = NULL;
 		}
@@ -709,7 +709,7 @@ class main
 		
 				// get data from form
 				$user_id 		= $this->user->data['user_id'];
-				$title 			= request_var('title', '');
+				$title 			= utf8_normalize_nfc(request_var('title', '', true));
 				$month 			= request_var('month', 0);
 				$day			= request_var('day', 0);
 				$year			= request_var('year', 0);
@@ -721,7 +721,7 @@ class main
 					$start_time		= request_var('start_hour', 0) . ':' . str_pad(request_var('start_minute', 0), 2, '0', STR_PAD_LEFT) . ' ' . request_var('start_meridiem', '');
 					$end_time		= request_var('end_hour', 0) . ':' . str_pad(request_var('end_minute', 0), 2, '0', STR_PAD_LEFT) . ' ' . request_var('end_meridiem', '');
 				}
-				$description	= request_var('description', '');
+				$description	= utf8_normalize_nfc(request_var('description', '', true));
 				if($description == '') {
 					$description = NULL;
 				}
@@ -988,11 +988,11 @@ class main
 				
 				// get vars
 				$user_id = $this->user->data['user_id'];
-				$subject = request_var('subject', '');
+				$subject = utf8_normalize_nfc(request_var('subject', '', true));
 				if($subject == '') {
 					$subject = NULL;
 				}
-				$text = request_var('text', '');
+				$text = utf8_normalize_nfc(request_var('text', '', true));
 				if($text == '') {
 					$text = NULL;
 				}
