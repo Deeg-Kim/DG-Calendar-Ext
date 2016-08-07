@@ -258,24 +258,19 @@ class events
 		if(!is_int($id)) {
 			return false;
 		}
-		
-		$sql_array = array(
-			'SELECT'		=> '*',
-			'FROM'		=> array(CALENDAR_EVENTS_TABLE => 'c'),
-			'WHERE'		=> 'c.id = ' . $id,
-		);
-		
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+
+		$sql = 'SELECT COUNT(id) AS event_count FROM ' . CALENDAR_EVENTS_TABLE . ' WHERE id = ' . $id ;
+
 		$result = $this->db->sql_query($sql);
-		
-		if($result->num_rows == 0) {
-			return false;
-		}
-		else {
-			return true;
-		}
+
+		// The number of founders is now available here:
+		$event_count= (int) $this->db->sql_fetchfield('event_count');
+
+		$this->db->sql_freeresult($result);
+
+		return $event_count == 1;
 	}
-	
+
 	/**
 	* Delete event
 	*
